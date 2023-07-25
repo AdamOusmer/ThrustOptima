@@ -18,7 +18,6 @@ class Scans:
         """
         Inner Class containing all the function to analyse the image for the opened image.
         """
-
         def __init__(self, image):
             """
             Constructor for the Scan class.
@@ -55,7 +54,7 @@ class Scans:
             """
             pass
 
-    def __init__(self, name, directory=None):
+    def __init__(self, name: str = "", directory: str = None):
         """
         Constructor for the Scans class.
         :param name: Name of the scan that will be used to be stored in the database.
@@ -92,25 +91,18 @@ class Scans:
             raise Ex.AlreadyLoaded("This instance is already loaded.")
             # TODO add a way to unload the instance if the user wants to.
 
+        self.loaded = True
+
+        #  Dicomdir is a file that contains a summary of a FIle-Set.
         dicomdir = pydicom.dcmread(self.dicomdir_path)
 
         # TODO: Find a way to load the images from the DICOMDIR file.
+
         # TODO: Find a way to make all type of DICOMDIR files work.
 
         # Access all files to load the images.
-        for patient in dicomdir.patient_records:
-            # TODO add dimension to the array to store the images for each patient.
 
-            print(patient)
+        print(dicomdir.dir())
+        print(dicomdir)
 
-            for study in patient.children:
-
-                for series in study.children:
-
-                    for image in series.children:
-
-                        try:
-                            print(image.pixel_array.shape)
-                            # TODO: Find a way to load the images from the DICOMDIR file.
-                        except Ex.ImageEmpty as e:
-                            print(f"An error while loading {image} happened. Will be skipped.", e)
+        print(type(dicomdir))
