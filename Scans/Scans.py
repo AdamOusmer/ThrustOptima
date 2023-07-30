@@ -3,8 +3,9 @@
     Module for the Scans class.
 """
 
-import pydicom
 from tkinter import filedialog
+import pydicom
+import numpy as np
 import Exceptions.Exceptions as Ex
 import os
 
@@ -14,10 +15,12 @@ class Scans:
     Class opening and reading all the DICOMDIR file and creating an array of Scan objects
     """
 
+    # Start inner class Scan
     class Scan:
         """
         Inner Class containing all the function to analyse the image for the opened image.
         """
+
         def __init__(self, image):
             """
             Constructor for the Scan class.
@@ -35,6 +38,7 @@ class Scans:
         def shaping(self):
             """
             Function to find the contour of object scanned.
+            TODO do the function in the scan class
             """
             self.shaped = True
             pass
@@ -54,6 +58,7 @@ class Scans:
             """
             pass
 
+    # Class Scans starts here
     def __init__(self, name: str = "", directory: str = None):
         """
         Constructor for the Scans class.
@@ -67,6 +72,7 @@ class Scans:
         self.dicomdir_path = None
         self.name = f"CTScan_{name}"
         self.scans = []
+        self.patientsIDs = []
         self.loaded = False
 
         # Getting the path to the DICOMDIR file, if not provided, it will open a file selector.
@@ -87,6 +93,17 @@ class Scans:
         WARNING: use this method only after the constructor.
         WARNING: This method is not working yet.
         """
+
+        def dicom_is_image(dicom_image):
+            """
+            Internal function to check if the DICOM file is an image.
+            :param dicom_image: pydicom object to check.
+            :return: True if the DICOM file is an image, False otherwise.
+            """
+            return getattr(dicom_image, 'pixel_array', None) is not None
+
+        nb_picture = 0
+
         if self.loaded:
             raise Ex.AlreadyLoaded("This instance is already loaded.")
             # TODO add a way to unload the instance if the user wants to.
@@ -96,13 +113,19 @@ class Scans:
         #  Dicomdir is a file that contains a summary of a FIle-Set.
         dicomdir = pydicom.dcmread(self.dicomdir_path)
 
+        for dicom in dicomdir.DirectoryRecordSequence:
+
+            record = self.dicomdir_path.removesuffix("DICOMDIR")
+            if dicom.DirectoryRecordType == "IMAGE":
+                for i in dicom.ReferencedFileID:
+                    record += "/" + i
+
+                image_read = pydicom.dcmread(record)
+
+                if dicom_is_image(image_read):
+                    nb_picture += 1
+                    # TODO: Save the images in the scans array.
+
         # TODO: Find a way to load the images from the DICOMDIR file.
 
-        # TODO: Find a way to make all type of DICOMDIR files work.
-
-        # Access all files to load the images.
-
-        print(dicomdir.dir())
-        print(dicomdir)
-
-        print(type(dicomdir))
+        print(f"Number of images founded: {nb_picture}")
