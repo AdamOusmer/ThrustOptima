@@ -5,7 +5,7 @@
 
 from tkinter import filedialog
 import pydicom
-import numpy as np
+import numpy as np  # needed for pydicom to work
 import Exceptions.Exceptions as Ex
 import os
 
