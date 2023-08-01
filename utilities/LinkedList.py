@@ -18,6 +18,7 @@ To make sure that the LinkedList class is used properly, the Node class is defin
 The pointer attribute is reset both at the beginning and at the end of the function that uses it.
 This is done to avoid any error when using the LinkedList class.
 """
+import sys
 
 
 class LinkedList:
@@ -159,11 +160,13 @@ class LinkedList:
 
         if self.head is None:
             self.head = self._Node(data=other, key=key if key is not None else str(self.size + 1))
+            self.size += 1
             return
 
         self.find_tail()
 
         self.pointer.next = self._Node(data=other, key=key if key is not None else str(self.size + 1))
+        self.size += 1
 
         self.pointer = self.head
 
@@ -202,17 +205,20 @@ class LinkedList:
         if self.head is None:
             return
 
-        if self.head.key == key:
+        if self.head.key == key:  # If the node to delete is the head
             self.head = self.head.next
+            self.size -= 1
             return
 
-        while self.pointer.next is not None:
+        while self.pointer.next is not None:  # Check if the next of the node pointed is the node to delete
             if self.pointer.next.key == key:
                 self.pointer.next = self.pointer.next.next
+                self.size -= 1
                 return
             self.pointer = self.pointer.next
 
         self.pointer = self.head
+        print("The node does not exist", file=sys.stderr)
 
     def __getitem__(self, key: str = None):
         """
@@ -228,11 +234,12 @@ class LinkedList:
 
         while self.pointer is not None:
             if self.pointer.key == key:
+                self.pointer = self.head
                 return self.pointer.data
             self.pointer = self.pointer.next
 
-        else:
-            return None
+        self.pointer = self.head
+        return None
 
     def __sizeof__(self):
         """
@@ -272,6 +279,24 @@ class LinkedList:
         other.pointer = other.head
 
         return True
+
+    def __str__(self, show_data: bool = False):
+        """
+        Overloading the str operator to print the list.
+        :return: String with the .
+        """
+        string: str = f"List{{\nSize:{self.size}\nHead: {self.head}\n Nodes: "
+
+        self.pointer = self.head
+
+        while self.pointer is not None:
+            string += f"{self.pointer.key} | "
+            if show_data:
+                string += f"{self.pointer.data}\n"
+
+        self.pointer = self.head
+        
+        return string + "\n}"
 
     @property
     def head(self):
