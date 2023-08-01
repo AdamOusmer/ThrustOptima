@@ -9,10 +9,20 @@ This module controls the flow of the program
 
 from Scans.Scans import Scans
 
+from utilities.LinkedList import LinkedList as linkedList
+
 
 def load_existing_scans():
     # This will be used when we want to open an existing scan already analyzed.
     pass
+
+
+a = linkedList()
+
+print(a.size)
+a.add("a", "a")
+print(a)
+print(a.size)
 
 
 # TODO add a module for the database

@@ -9,7 +9,7 @@ This module contains the definition of the Scans class.
 The Scans class is the main analysis class. It contains all the functions to open and analyze the DICOMDIR file.
 It also contains the definition of the Scan inner class, which is used to store the data of each scan independently.
 
-The LinkedList class is used to store the patient's IDs and the scans associated with it in order to be able to
+The LinkedList class is used to store the patient's IDs and the _scans associated with it in order to be able to
 easily access the data and separate the data from the analysis.
 """
 
@@ -78,11 +78,11 @@ class Scans:
         """
 
         # Set and create attributes
-        self.dicomdir_path = None
-        self.name = f"CTScan_{name}"
-        self.scans = []
-        self.patientsIDs = set()
-        self.loaded = False
+        self._dicomdir_path = None
+        self._name = f"CTScan_{name}"
+        self._scans = []
+        self._patientsIDs = set()
+        self._loaded = False
 
         # Getting the path to the DICOMDIR file, if not provided, it will open a file selector.
         if directory is None:
@@ -94,7 +94,7 @@ class Scans:
         elif not (os.path.exists(directory)):  # If the path is provided, check if it exists.
             raise Ex.NoDirectoryFound("Path does not exist. Instance will not be create.")
 
-        self.dicomdir_path = directory  # Set the path to the DICOMDIR file if all components are valid.
+        self._dicomdir_path = directory  # Set the path to the DICOMDIR file if all components are valid.
 
     def load_data(self):
         """
@@ -120,11 +120,11 @@ class Scans:
 
             ordered_images = []
 
-            for _ in self.patientsIDs:
+            for _ in self._patientsIDs:
                 ordered_images.append([])
 
             for image in images:
-                if image.PatientID in self.patientsIDs:
+                if image.PatientID in self._patientsIDs:
                     pass
 
             # TODO: waiting for LinkedList to be done.
@@ -133,18 +133,18 @@ class Scans:
         nb_picture = 0
         images_not_separated = []
 
-        if self.loaded:
-            raise Ex.AlreadyLoaded("This instance is already loaded.")
+        if self._loaded:
+            raise Ex.AlreadyLoaded("This instance is already _loaded.")
             # TODO add a way to unload the instance if the user wants to.
 
-        self.loaded = True
+        self._loaded = True
 
         #  Dicomdir is a file that contains a summary of a FIle-Set.
-        dicomdir = pydicom.dcmread(self.dicomdir_path)
+        dicomdir = pydicom.dcmread(self._dicomdir_path)
 
         for dicom in dicomdir.DirectoryRecordSequence:
 
-            record = self.dicomdir_path.removesuffix("DICOMDIR")
+            record = self._dicomdir_path.removesuffix("DICOMDIR")
             if dicom.DirectoryRecordType == "IMAGE":
                 for i in dicom.ReferencedFileID:
                     record += "/" + i
@@ -156,7 +156,7 @@ class Scans:
                     images_not_separated.append(image_read)
                 else:
                     try:
-                        self.patientsIDs.add(image_read.PatientID)
+                        self._patientsIDs.add(image_read.PatientID)
                     except AttributeError:
                         print("No PatientID found.")
                     except Exception:  # TODO: Find a way to select all the exceptions that can be raised.
