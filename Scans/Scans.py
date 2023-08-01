@@ -1,6 +1,16 @@
 """
-    Adam Ousmer, Space Concordia : Rocketry Division, 2023
-    Module for the Scans class.
+******************************************************************
+Copyright Adam Ousmer for Space Concordia: Rocketry Division 2023
+All Rights Reserved.
+******************************************************************
+
+This module contains the definition of the Scans class.
+
+The Scans class is the main analysis class. It contains all the functions to open and analyze the DICOMDIR file.
+It also contains the definition of the Scan inner class, which is used to store the data of each scan independently.
+
+The LinkedList class is used to store the patient's IDs and the scans associated with it in order to be able to
+easily access the data and separate the data from the analysis.
 """
 
 from tkinter import filedialog
@@ -32,7 +42,6 @@ class Scans:
             self.image = image
             self.propensity = 0
             self.shaped_image = None
-            self.weak_spot = []
             self.shaped = False
 
         def shaping(self):
@@ -72,7 +81,7 @@ class Scans:
         self.dicomdir_path = None
         self.name = f"CTScan_{name}"
         self.scans = []
-        self.patientsIDs = []
+        self.patientsIDs = set()
         self.loaded = False
 
         # Getting the path to the DICOMDIR file, if not provided, it will open a file selector.
@@ -102,7 +111,27 @@ class Scans:
             """
             return getattr(dicom_image, 'pixel_array', None) is not None
 
+        def order_array_per_patients(images):
+            """
+            Internal function to order the images per patients.
+            :param images: Array of pydicom objects that contain an image.
+            :return: Array of pydicom objects ordered per patients.
+            """
+
+            ordered_images = []
+
+            for _ in self.patientsIDs:
+                ordered_images.append([])
+
+            for image in images:
+                if image.PatientID in self.patientsIDs:
+                    pass
+
+            # TODO: waiting for LinkedList to be done.
+            return ordered_images
+
         nb_picture = 0
+        images_not_separated = []
 
         if self.loaded:
             raise Ex.AlreadyLoaded("This instance is already loaded.")
@@ -124,7 +153,14 @@ class Scans:
 
                 if dicom_is_image(image_read):
                     nb_picture += 1
-                    # TODO: Save the images in the scans array.
+                    images_not_separated.append(image_read)
+                else:
+                    try:
+                        self.patientsIDs.add(image_read.PatientID)
+                    except AttributeError:
+                        print("No PatientID found.")
+                    except Exception:  # TODO: Find a way to select all the exceptions that can be raised.
+                        print("Error while reading the PatientID.")
 
         # TODO: Find a way to load the images from the DICOMDIR file.
 

@@ -1,7 +1,10 @@
 """
-    Adam Ousmer, Space Concordia : Rocketry Division, 2023
-    Main module for the ThrustOptima project.
-    This module is used to control the flow of the program.
+******************************************************************
+Copyright Adam Ousmer for Space Concordia: Rocketry Division 2023
+All Rights Reserved.
+******************************************************************
+
+This module controls the flow of the program
 """
 
 from Scans.Scans import Scans
