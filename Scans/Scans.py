@@ -14,6 +14,7 @@ easily access the data and separate the data from the analysis.
 """
 
 from tkinter import filedialog
+from utilities.LinkedList import LinkedList as linkedList
 import pydicom
 import numpy as np  # needed for pydicom to work
 import Exceptions.Exceptions as Ex
@@ -118,17 +119,15 @@ class Scans:
             :return: Array of pydicom objects ordered per patients.
             """
 
-            ordered_images = []
+            patients_scans = linkedList()
 
-            for _ in self._patientsIDs:
-                ordered_images.append([])
+            for patient_IDS in self._patientsIDs:
+                patients_scans.add([], str(patient_IDS))
 
             for image in images:
-                if image.PatientID in self._patientsIDs:
-                    pass
+                patients_scans.add_to_data(image, image.PatientID)
 
-            # TODO: waiting for LinkedList to be done.
-            return ordered_images
+            return patients_scans
 
         nb_picture = 0
         images_not_separated = []
@@ -162,6 +161,49 @@ class Scans:
                     except Exception:  # TODO: Find a way to select all the exceptions that can be raised.
                         print("Error while reading the PatientID.")
 
+        self._scans = order_array_per_patients(images_not_separated)
+        print(repr(self._scans))
+
         # TODO: Find a way to load the images from the DICOMDIR file.
 
         print(f"Number of images founded: {nb_picture}")
+
+    @property
+    def name(self):
+        """
+        Getter for the name of the scan.
+        :return: Name of the scan.
+        """
+        return self._name
+
+    @property
+    def scans(self):
+        """
+        Getter for the scans.
+        :return: Array of Scan objects.
+        """
+        return self._scans
+
+    @property
+    def patientsIDs(self):
+        """
+        Getter for the patients IDs.
+        :return: Array of patients IDs.
+        """
+        return self._patientsIDs
+
+    @property
+    def loaded(self):
+        """
+        Getter for the loaded attribute.
+        :return: True if the data has been loaded, False otherwise.
+        """
+        return self._loaded
+
+    @property
+    def dicomdir_path(self):
+        """
+        Getter for the path to the DICOMDIR file.
+        :return: Path to the DICOMDIR file.
+        """
+        return self._dicomdir_path
