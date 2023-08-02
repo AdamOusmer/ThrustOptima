@@ -152,7 +152,8 @@ class Scans:
 
                 if dicom_is_image(image_read):
                     nb_picture += 1
-                    images_not_separated.append(image_read)
+                    if image_read.ImageType[2] != "LOCALIZER" and image_read.ImageType[0] != "DERIVED":
+                        images_not_separated.append(image_read)
                 else:
                     try:
                         self._patientsIDs.add(image_read.PatientID)
@@ -163,8 +164,6 @@ class Scans:
 
         self._scans = order_array_per_patients(images_not_separated)
         print(repr(self._scans))
-
-        # TODO: Find a way to load the images from the DICOMDIR file.
 
         print(f"Number of images founded: {nb_picture}")
 
