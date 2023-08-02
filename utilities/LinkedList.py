@@ -47,6 +47,39 @@ class LinkedList:
             self._next = next_node
             self._key = key
 
+        def modify_data(self, data):
+            """
+            Function to modify the data stored in the node.
+            :param data: Data to be stored in the node.
+            """
+            self._data = data
+
+        def add_to_data(self, data):
+            """
+            Function to add data to the data stored in the node. it uses the += operator in case it is not a supported
+            type.
+
+            Supported types: list, set, dict, str, int, float, bool
+            :param data: Data to be added to the data stored in the node.
+            """
+
+            if not isinstance(data, (list, set, dict)):
+                if isinstance(self._data, list):
+                    self._data.append(data)
+                elif isinstance(self._data, set):
+                    self._data.add(data)
+                elif isinstance(self._data, dict):
+                    self._data.update(data)
+
+            if isinstance(data, list):
+                self._data += data
+            elif isinstance(data, set):
+                self._data.union(data)
+            elif isinstance(data, dict):
+                self._data.update(data)
+            else:
+                self._data += data
+
         @property
         def data(self):
             """
@@ -82,6 +115,14 @@ class LinkedList:
                 return False
 
             return self._data == other.data and self._key == other.key
+
+        def __ne__(self, other):
+            """
+            Overloading the != operator to compare two Node.
+            :param other:
+            :return:
+            """
+            return not self.__eq__(other)
 
         def __str__(self):
             """
@@ -119,7 +160,7 @@ class LinkedList:
         if data_tail is not None:
             for i in range(len(data_tail)):  # Adding the rest of the data to the list if there is any
                 self._size += 1
-                self.__add__(data_tail[i], str(data_tail_key[i]) if i < len(data_tail_key) else str(self._size))
+                self.add(data_tail[i], str(data_tail_key[i]) if i < len(data_tail_key) else str(self._size))
                 # If the key is not specified, then the key is the size of the list
 
     def find_tail(self):
@@ -142,6 +183,31 @@ class LinkedList:
 
         self._pointer.next = self._Node(data=data, key=key if key is not None else str(self._size + 1))
         self._size += 1
+
+        self._pointer = self._head
+
+    def add_to_data(self, data, key: str = "None"):
+        """
+        Adding data to a node based on the key.
+        :param data: Data to be added to the data stored in the node.
+        :param key: key of the node.
+        """
+
+        self._pointer = self._head
+
+        if self._head is None:
+            raise IndexError("The list is empty")
+
+        if self._head.key == key:
+            self._head.add_to_data(data)
+            return
+
+        while self._pointer.next is not None:
+            if self._pointer.key == key:
+                self._pointer.add_to_data(data)
+                self._pointer = self._head
+                return
+            self._pointer = self._pointer.next
 
         self._pointer = self._head
 
@@ -256,13 +322,24 @@ class LinkedList:
 
         return True
 
+    def __ne__(self, other):
+        """
+        Overloading the != operator to compare two lists.
+        :param other:
+        :return:
+        """
+        return not self.__eq__(other)
+
     def __str__(self, show_data: bool = False):
         """
         Overloading the str operator to print the list.
         :param show_data: Boolean to specify if the data of the nodes should be printed.
         :return: String with the list. If show_data is True, it will print the data of the nodes.
         """
-        string: str = f"List{{\nSize:{self._size}\nHead: {self._head}\n Nodes: "
+        if self._head is None:
+            return "List{\t\nSize: 0\nHead: None\n Nodes: None\n}"
+
+        string: str = f"List{{\n\tSize:{self._size}\n\tHead: {self._head}\n\tNodes: "
 
         self._pointer = self._head
 
@@ -270,10 +347,18 @@ class LinkedList:
             string += f"{self._pointer.key} | "
             if show_data:
                 string += f"{self._pointer.data}\n"
+            self._pointer = self._pointer.next
 
         self._pointer = self._head
 
         return string + "\n}"
+
+    def __repr__(self):
+        """
+        Overloading the repr operator to print the list.
+        :return: String with the list.
+        """
+        return self.__str__(show_data=True)
 
     @property
     def head(self):
@@ -283,7 +368,6 @@ class LinkedList:
         """
         return self._head
 
-
     @property
     def pointer(self):
         """
@@ -291,7 +375,6 @@ class LinkedList:
         :return: Pointer of the list.
         """
         return self._pointer
-
 
     @property
     def size(self):

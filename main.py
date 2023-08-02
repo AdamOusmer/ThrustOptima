@@ -17,14 +17,6 @@ def load_existing_scans():
     pass
 
 
-a = linkedList()
-
-print(a.size)
-a.add("a", "a")
-print(a)
-print(a.size)
-
-
 # TODO add a module for the database
 # TODO add a module for the GUI
 
