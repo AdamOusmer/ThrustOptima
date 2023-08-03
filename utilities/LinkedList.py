@@ -194,27 +194,27 @@ class LinkedList:
 
         self._pointer = self._head
 
-        def get_node(self, key: str = "None"):
-            """
-            Getting a node based on the key.
-            :param key: key of the node.
-            :return: Node
-            """
+    def get_node(self, key: str = "None"):
+        """
+        Getting a node based on the key.
+        :param key: key of the node.
+        :return: Node
+        """
 
-            self._pointer = self._head
+        self._pointer = self._head
 
-            if self._head is None:
-                raise IndexError("The list is empty")
+        if self._head is None:
+            raise IndexError("The list is empty")
 
-            if self._head.key == key:
-                return self._head
+        if self._head.key == key:
+            return self._head
 
-            while self._pointer is not None:
-                if self._pointer.key == key:
-                    pointer = self._pointer
-                    self._pointer = self._head
-                    return pointer
-                self._pointer = self._pointer.next
+        while self._pointer is not None:
+            if self._pointer.key == key:
+                pointer = self._pointer
+                self._pointer = self._head
+                return pointer
+            self._pointer = self._pointer.next
 
     def __contains__(self, item, arg: str = "None"):
         """
