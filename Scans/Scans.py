@@ -16,7 +16,6 @@ easily access the data and separate the data from the analysis.
 from tkinter import filedialog
 from utilities.LinkedList import LinkedList as linkedList
 import pydicom
-import numpy as np  # needed for pydicom to work
 import Exceptions.Exceptions as Ex
 import os
 
@@ -164,6 +163,7 @@ class Scans:
 
         self._scans = order_array_per_patients(images_not_separated)
         print(repr(self._scans))
+
 
         print(f"Number of images founded: {nb_picture}")
 

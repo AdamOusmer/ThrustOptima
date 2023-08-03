@@ -194,6 +194,28 @@ class LinkedList:
 
         self._pointer = self._head
 
+        def get_node(self, key: str = "None"):
+            """
+            Getting a node based on the key.
+            :param key: key of the node.
+            :return: Node
+            """
+
+            self._pointer = self._head
+
+            if self._head is None:
+                raise IndexError("The list is empty")
+
+            if self._head.key == key:
+                return self._head
+
+            while self._pointer is not None:
+                if self._pointer.key == key:
+                    pointer = self._pointer
+                    self._pointer = self._head
+                    return pointer
+                self._pointer = self._pointer.next
+
     def __contains__(self, item, arg: str = "None"):
         """
         :param item: item that needs to be found in the list
@@ -258,8 +280,9 @@ class LinkedList:
 
         while self._pointer is not None:
             if self._pointer.key == key:
+                pointer = self._pointer
                 self._pointer = self._head
-                return self._pointer.data
+                return pointer.data
             self._pointer = self._pointer.next
 
         self._pointer = self._head
