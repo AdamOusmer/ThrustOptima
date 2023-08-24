@@ -46,7 +46,7 @@ class LinkedList:
 
             self._data = data
             self._next = next_node
-            self._key = key
+            self._key: str = key
 
         def modify_data(self, data):
             """
@@ -61,6 +61,12 @@ class LinkedList:
             :param data: Data to be added to the data stored in the node.
             """
             self._data.append(data)
+
+        def order_data_dicom_time(self):
+            """
+            Function to order the data stored in the node by the time the data was taken.
+            """
+            self._data.sort(key=lambda x: x.AcquisitionTime)
 
         @property
         def data(self):
@@ -136,8 +142,8 @@ class LinkedList:
 
         # Attributes definition
         self._head = None if first_data is None else self._Node(data=first_data, key=first_key)
-        self._size = 0 if self._head is None else 1
         self._pointer = self._head
+        self._size: int = 0 if self._head is None else 1
 
         if data_tail is not None:
             for i in range(len(data_tail)):  # Adding the rest of the data to the list if there is any
@@ -216,8 +222,58 @@ class LinkedList:
                 return pointer
             self._pointer = self._pointer.next
 
+    def get_keys(self):
+        """
+        Function that return an array with all the keys of each Node contained in the LinkedList
+        :return: array of strings
+        """
+
+        if self._head is None:
+            return None
+
+        self._pointer = self._head
+
+        arr = []
+
+        while self._pointer is not None:
+            arr.append(self._pointer.key)
+            self._pointer = self._pointer.next
+
+        self._pointer = self._head
+
+        return arr
+
+    def order_data_dicom_time(self):
+        """
+        Function to order the data stored in the node by the time the data was taken.
+        """
+        self._pointer = self._head
+
+        while self._pointer is not None:
+            self._pointer.order_data_dicom_time()
+            self._pointer = self._pointer.next
+
+        self._pointer = self._head
+
+    def order_node_data_dicom_time(self, key):
+        """
+        Function to order the data stored in the node by the time the data was taken.
+        """
+        self._pointer = self._head
+
+        while self._pointer is not None:
+            if self._pointer.key == key:
+                self._pointer.order_data_dicom_time()
+                self._pointer = self._head
+                return
+
+            self._pointer = self._pointer.next
+
+        self._pointer = self._head
+
     def __contains__(self, item, arg: str = "None"):
         """
+        Overloading the in operator to check if an item is in the list.
         :param item: item that needs to be found in the list
         :param arg: String that specify data or key. If None it searches for the key
         :return: boolean
@@ -238,6 +294,20 @@ class LinkedList:
                     test_contain = True
 
         return test_contain
+
+    def __next__(self):
+        """
+        Overloading the next operator to iterate through the list.
+        :return: Iterator
+        """
+        self._pointer = self._head
+
+        if self._pointer is None:
+            self._pointer = self._head
+            raise StopIteration
+        else:
+            self._pointer = self._pointer.next
+            return self._pointer
 
     def __delitem__(self, key: str = None):
         """
@@ -376,6 +446,13 @@ class LinkedList:
         self._pointer = self._head
 
         return string + "\n}"
+
+    def __iter__(self):
+        """
+        Overloading the iter operator to iterate through the list.
+        :return: Iterator of the list.
+        """
+        return self
 
     @property
     def head(self):

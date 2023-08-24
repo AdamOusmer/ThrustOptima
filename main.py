@@ -6,10 +6,10 @@ All Rights Reserved.
 
 This module controls the flow of the program
 """
-
 from Scans.Scans import Scans
-
-from utilities.LinkedList import LinkedList as linkedList
+from tqdm import tqdm
+import matplotlib.pyplot as plt
+import time
 
 
 def load_existing_scans():
@@ -23,3 +23,9 @@ def load_existing_scans():
 Scans = Scans("FirstScan")
 
 Scans.load_data()
+Scans.load_image()
+
+for i in tqdm(range(len(Scans.scans.head.data))):
+    plt.imshow(Scans.scans.head.data[i].pixel_array, cmap="bone")
+    plt.show()
+    time.sleep(10) if i % 4 == 0 else None  # To avoid http error 429: too many requests

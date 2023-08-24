@@ -37,4 +37,6 @@ class DangerousModification(Exception):
         super().__init__(message)
 
 
-
+class NotLoaded(Exception):
+    def __init__(self, message: str = "No data has been loaded yet. Please load data before using this function."):
+        super().__init__(message)

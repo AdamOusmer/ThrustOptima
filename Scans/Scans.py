@@ -15,6 +15,7 @@ easily access the data and separate the data from the analysis.
 
 from tkinter import filedialog
 from utilities.LinkedList import LinkedList as linkedList
+import numpy as np
 import pydicom
 import Exceptions.Exceptions as Ex
 import os
@@ -31,7 +32,7 @@ class Scans:
         Inner Class containing all the function to analyse the image for the opened image.
         """
 
-        def __init__(self, image):
+        def __init__(self, image: np.ndarray = None):
             """
             Constructor for the Scan class.
             :param image: pydicom object containing the image.
@@ -39,10 +40,10 @@ class Scans:
             if image is None:
                 raise Ex.ImageEmpty("Image is empty.")
 
-            self.image = image
-            self.propensity = 0
-            self.shaped_image = None
-            self.shaped = False
+            self.image: np.ndarray = image
+            self.propensity: float = 0
+            self.shaped_image: np.ndarray = image
+            self.shaped: bool = False
 
         def shaping(self):
             """
@@ -68,7 +69,8 @@ class Scans:
             pass
 
     # Class Scans starts here
-    def __init__(self, name: str = "", directory: str = None):
+    def __init__(self, name: str = None, directory: str = None,
+                 coefficient: float = 0):  # TODO change coefficient with the one for the human head
         """
         Constructor for the Scans class.
         :param name: Name of the scan that will be used to be stored in the database.
@@ -79,17 +81,18 @@ class Scans:
 
         # Set and create attributes
         self._dicomdir_path = None
-        self._name = f"CTScan_{name}"
-        self._scans = []
-        self._patientsIDs = set()
-        self._loaded = False
+        self._name: str = f"CTScan_{name if name is not None else 'Unknown'}"
+        self._scans: linkedList = linkedList()
+        self._patientsIDs: set = set()
+        self._loaded: bool = False
+        self._coefficient = coefficient
 
         # Getting the path to the DICOMDIR file, if not provided, it will open a file selector.
         if directory is None:
             directory = filedialog.askopenfilename()  # Open os files selector
 
             if not directory:  # In case the file selector is closed without selecting a file.
-                raise Ex.NoDirectorySelected("No folder selected. Instance will not be create.")
+                raise Ex.NoDirectorySelected("No DICOMDIR selected. Instance will not be create.")
 
         elif not (os.path.exists(directory)):  # If the path is provided, check if it exists.
             raise Ex.NoDirectoryFound("Path does not exist. Instance will not be create.")
@@ -138,6 +141,7 @@ class Scans:
         self._loaded = True
 
         #  Dicomdir is a file that contains a summary of a FIle-Set.
+        # TODO add comments
         dicomdir = pydicom.dcmread(self._dicomdir_path)
 
         for dicom in dicomdir.DirectoryRecordSequence:
@@ -164,8 +168,37 @@ class Scans:
         self._scans = order_array_per_patients(images_not_separated)
         print(repr(self._scans))
 
-
         print(f"Number of images founded: {nb_picture}")
+
+    def load_image(self):
+        """
+        Method to load the images from each object of the linked list.
+        This method will be used after the load_data method and normalize the values from the CT scan.
+        Will create the instances of the Scan class.
+
+        This is the computer vision part of the project.
+
+        :raises NotLoaded: If the data has not been loaded yet.
+        :return:
+        """
+
+        if not self._loaded:
+            raise Ex.NotLoaded("Data has not been loaded yet.")
+
+        # order the data in order of time
+        print("Ordering the data in order of time.")
+        self._scans.order_data_dicom_time()
+        print("Data ordered.")
+
+        # TODO normalize the data
+
+        hWater = 0
+
+        correction = ((self._coefficient - hWater) / hWater) * 100
+
+        for i in self._scans.get_keys():
+            for j in self._scans[i]:
+                j = j / correction
 
     @property
     def name(self):
@@ -206,3 +239,12 @@ class Scans:
         :return: Path to the DICOMDIR file.
         """
         return self._dicomdir_path
+
+    @property
+    def coefficient(self):
+        """
+        Getter for the coefficient used to normalize the data based on the Houn's level
+        :return: Coefficient
+        """
+
+        return self._coefficient
