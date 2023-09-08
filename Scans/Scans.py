@@ -27,12 +27,12 @@ class Scans:
     """
 
     # Start inner class Scan
-    class Scan:
+    class _Scan:
         """
         Inner Class containing all the function to analyse the image for the opened image.
         """
 
-        def __init__(self, image: np.ndarray = None):
+        def __init__(self, image: pydicom.FileDataset = None):
             """
             Constructor for the Scan class.
             :param image: pydicom object containing the image.
@@ -40,23 +40,29 @@ class Scans:
             if image is None:
                 raise Ex.ImageEmpty("Image is empty.")
 
-            self.image: np.ndarray = image
+            self._image: pydicom.FileDataset = image
+            self.pixel_array: np.ndarray = image.pixel_array
             self.propensity: float = 0
-            self.shaped_image: np.ndarray = image
-            self.shaped: bool = False
+            self._shaped: bool = False
+
+        def filter(self):
+            """
+            Function to filter the image based on the ConvolutionKernel.
+            """
+            pass
 
         def shaping(self):
             """
             Function to find the contour of object scanned.
             TODO do the function in the scan class
             """
-            self.shaped = True
+            self._shaped = True
             pass
 
         def cal_propensity(self):
             """ Function to calculate the propensity of the image that has been contoured. """
 
-            if not self.shaped:
+            if not self._shaped:
                 print("Warning: Image has not been shaped yet.")
 
             pass
@@ -83,7 +89,7 @@ class Scans:
         self._dicomdir_path = None
         self._name: str = f"CTScan_{name if name is not None else 'Unknown'}"
         self._scans: linkedList = linkedList()
-        self._patientsIDs: set = set()
+        self._patients_ids: set = set()
         self._loaded: bool = False
         self._coefficient = coefficient
 
@@ -121,13 +127,15 @@ class Scans:
             :return: Array of pydicom objects ordered per patients.
             """
 
+            images = sorted(images, key=lambda x: x.InstanceNumber)
+
             patients_scans = linkedList()
 
-            for patient_IDS in self._patientsIDs:
+            for patient_IDS in self._patients_ids:
                 patients_scans.add([], str(patient_IDS))
 
             for image in images:
-                patients_scans.add_to_data(image, image.PatientID)
+                patients_scans.add_to_data(self._Scan(image), image.PatientID)
 
             return patients_scans
 
@@ -154,51 +162,20 @@ class Scans:
                 image_read = pydicom.dcmread(record)
 
                 if dicom_is_image(image_read):
-                    nb_picture += 1
                     if image_read.ImageType[2] != "LOCALIZER" and image_read.ImageType[0] != "DERIVED":
+                        nb_picture += 1
                         images_not_separated.append(image_read)
                 else:
                     try:
-                        self._patientsIDs.add(image_read.PatientID)
+                        self._patients_ids.add(image_read.PatientID)
                     except AttributeError:
                         print("No PatientID found.")
                     except Exception:  # TODO: Find a way to select all the exceptions that can be raised.
                         print("Error while reading the PatientID.")
 
         self._scans = order_array_per_patients(images_not_separated)
-        print(repr(self._scans))
 
         print(f"Number of images founded: {nb_picture}")
-
-    def load_image(self):
-        """
-        Method to load the images from each object of the linked list.
-        This method will be used after the load_data method and normalize the values from the CT scan.
-        Will create the instances of the Scan class.
-
-        This is the computer vision part of the project.
-
-        :raises NotLoaded: If the data has not been loaded yet.
-        :return:
-        """
-
-        if not self._loaded:
-            raise Ex.NotLoaded("Data has not been loaded yet.")
-
-        # order the data in order of time
-        print("Ordering the data in order of time.")
-        self._scans.order_data_dicom_time()
-        print("Data ordered.")
-
-        # TODO normalize the data
-
-        hWater = 0
-
-        correction = ((self._coefficient - hWater) / hWater) * 100
-
-        for i in self._scans.get_keys():
-            for j in self._scans[i]:
-                j = j / correction
 
     @property
     def name(self):
@@ -217,12 +194,12 @@ class Scans:
         return self._scans
 
     @property
-    def patientsIDs(self):
+    def patients_ids(self):
         """
         Getter for the patients IDs.
         :return: Array of patients IDs.
         """
-        return self._patientsIDs
+        return self._patients_ids
 
     @property
     def loaded(self):
@@ -243,8 +220,7 @@ class Scans:
     @property
     def coefficient(self):
         """
-        Getter for the coefficient used to normalize the data based on the Houn's level
+        Getter for the coefficient used to normalize the data based on the Huddersfield unit
         :return: Coefficient
         """
-
         return self._coefficient

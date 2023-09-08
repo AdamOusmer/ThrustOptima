@@ -48,13 +48,6 @@ class LinkedList:
             self._next = next_node
             self._key: str = key
 
-        def modify_data(self, data):
-            """
-            Function to modify the data stored in the node.
-            :param data: Data to be stored in the node.
-            """
-            self._data = data
-
         def add_to_data_list(self, data):
             """
             Function to add data to the data stored in the node. The data is added to the end of the list.
@@ -67,6 +60,13 @@ class LinkedList:
             Function to order the data stored in the node by the time the data was taken.
             """
             self._data.sort(key=lambda x: x.AcquisitionTime)
+
+        def modify_data(self, data):
+            """
+            Function to modify the data stored in the node.
+            :param data: Data to be stored in the node.
+            """
+            self._data = data
 
         @property
         def data(self):
@@ -194,6 +194,27 @@ class LinkedList:
         while self._pointer is not None:
             if self._pointer.key == key:
                 self._pointer.add_to_data_list(data)
+                self._pointer = self._head
+                return
+            self._pointer = self._pointer.next
+
+        self._pointer = self._head
+
+    def modify_data(self, data, key: str = "None"):
+        """
+        Modifying the data stored in a node based on the key.
+        :param data: Data to be stored in the node.
+        :param key: key of the node.
+        """
+
+        self._pointer = self._head
+
+        if self._head is None:
+            raise IndexError("The list is empty")
+
+        while self._pointer is not None:
+            if self._pointer.key == key:
+                self._pointer.modify_data(data)
                 self._pointer = self._head
                 return
             self._pointer = self._pointer.next

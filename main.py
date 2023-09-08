@@ -6,6 +6,7 @@ All Rights Reserved.
 
 This module controls the flow of the program
 """
+
 from Scans.Scans import Scans
 from tqdm import tqdm
 import matplotlib.pyplot as plt
@@ -23,7 +24,6 @@ def load_existing_scans():
 Scans = Scans("FirstScan")
 
 Scans.load_data()
-Scans.load_image()
 
 for i in tqdm(range(len(Scans.scans.head.data))):
     plt.imshow(Scans.scans.head.data[i].pixel_array, cmap="bone")
