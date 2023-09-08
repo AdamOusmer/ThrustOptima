@@ -17,7 +17,6 @@ def load_existing_scans():
     # This will be used when we want to open an existing scan already analyzed.
     pass
 
-
 # TODO add a module for the database
 # TODO add a module for the GUI
 
