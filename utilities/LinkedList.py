@@ -37,16 +37,25 @@ class LinkedList:
         Internal class that contain the definition of the Node for the link list.
         """
 
-        def __init__(self, data=None, next_node=None, key: str = "None"):
+        def __init__(self, data=None, next_node=None, key: str = "None", range: tuple = (-1, -1)):
             """
             Constructor for the Node class.
             :param data: Data to be stored in the node.
             :param next_node: Pointer to the _next node.
+            :param key: key of the node.
             """
 
             self._data = data
             self._next = next_node
             self._key: str = key
+            self._range: tuple = range
+
+        def clear_data_out_of_range(self):
+            """
+            Function to clear the data out of the range specified by the user.
+            """
+
+            self._data = [data for data in self._data if self._range[0] <= data.InstanceNumber <= self._range[1]]
 
         def add_to_data_list(self, data):
             """

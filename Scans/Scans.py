@@ -41,7 +41,8 @@ class Scans:
                 raise Ex.ImageEmpty("Image is empty.")
 
             self._image: pydicom.FileDataset = image
-            self.pixel_array: np.ndarray = image.pixel_array
+            self.pixel_array: np.ndarray = np.maximum(image.pixel_array.astype(float), 0) / image.pixel_array.astype(
+                float).max()
             self.propensity: float = 0
             self._shaped: bool = False
 
@@ -127,7 +128,7 @@ class Scans:
             :return: Array of pydicom objects ordered per patients.
             """
 
-            images = sorted(images, key=lambda x: x.InstanceNumber)
+            images = sorted(images, key=lambda image_sorter: image_sorter.InstanceNumber)
 
             patients_scans = linkedList()
 
