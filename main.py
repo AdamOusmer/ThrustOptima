@@ -24,8 +24,7 @@ def load_existing_scans():
 Scans = Scans("FirstScan")
 
 Scans.load_data()
-
-for i in tqdm(range(len(Scans.scans.head.data))):
-    plt.imshow(Scans.scans.head.data[i].pixel_array, cmap="grey")
-    plt.show()
-    time.sleep(10) if i % 4 == 0 else None  # To avoid http error 429: too many requests
+i = 0
+for j in tqdm(Scans.scans._head.data[40 if Scans.scans._head.key == "FLASH" else 500:]):
+    for k in j.pixel_array_HU:
+        print(k)

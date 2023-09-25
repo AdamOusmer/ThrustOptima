@@ -15,10 +15,13 @@ easily access the data and separate the data from the analysis.
 
 from tkinter import filedialog
 from utilities.LinkedList import LinkedList as linkedList
+import Exceptions.Exceptions as Ex
 import numpy as np
 import pydicom
-import Exceptions.Exceptions as Ex
 import os
+import sys
+import scipy.ndimage as ndi
+import cv2
 
 
 class Scans:
@@ -41,43 +44,55 @@ class Scans:
                 raise Ex.ImageEmpty("Image is empty.")
 
             self._image: pydicom.FileDataset = image
-            self.pixel_array: np.ndarray = np.maximum(image.pixel_array.astype(float), 0) / image.pixel_array.astype(
-                float).max()
+
+            self.pixel_array_HU = (
+                    self._image.pixel_array * self._image.RescaleSlope
+                    + self._image.RescaleIntercept).clip(min=0, max=255).astype(np.uint8)
+            # Here the image is set to HoundsField Unit (HU) and the pixel array is normalized.
+
+            self._pixel_array_shaped: np.array = self.pixel_array_HU
+
             self.propensity: float = 0
             self._shaped: bool = False
 
-        def filter(self):
-            """
-            Function to filter the image based on the ConvolutionKernel.
-            """
-            pass
-
         def shaping(self):
             """
-            Function to find the contour of object scanned.
+            Function to find the contour of object scanned and save it in the self.pixel_array_shaped.
             TODO do the function in the scan class
             """
+
+            def preprocessing():
+                """
+                Function to apply a gaussian blur to the image.
+                """
+                # Apply gamma augmentation
+                gamma_corrected = np.power(self.pixel_array_HU / 255.0, 1)
+                gamma_corrected = np.uint8(gamma_corrected * 255.0)
+
+                # Apply Gaussian blur
+                blurred = cv2.GaussianBlur(gamma_corrected, (5, 5), 1)
+                gray = cv2.cvtColor(blurred, cv2.COLOR_BGR2GRAY)
+
+                # Apply Laplacian filter
+                laplacian = cv2.Laplacian(src=gray, ddepth=1)
+
+                # Convert the result to an 8-bit image
+                self._pixel_array_shaped = np.uint8(np.absolute(laplacian))
+
             self._shaped = True
-            pass
+
+
 
         def cal_propensity(self):
             """ Function to calculate the propensity of the image that has been contoured. """
 
             if not self._shaped:
-                print("Warning: Image has not been shaped yet.")
+                print("Warning: Image has not been shaped yet.", file=sys.stderr)
 
-            pass
-
-        def weak_spot(self):
-            """
-            To develop and save image in an easily readable image file.
-            TODO not sure to add it, will be in the official release or in the first major update
-            """
             pass
 
     # Class Scans starts here
-    def __init__(self, name: str = None, directory: str = None,
-                 coefficient: float = 0):  # TODO change coefficient with the one for the human head
+    def __init__(self, name: str = None, directory: str = None, ):
         """
         Constructor for the Scans class.
         :param name: Name of the scan that will be used to be stored in the database.
@@ -88,11 +103,10 @@ class Scans:
 
         # Set and create attributes
         self._dicomdir_path = None
-        self._name: str = f"CTScan_{name if name is not None else 'Unknown'}"
+        self._name: str = f"CTScan_{name if name is not None else 'Unknown'}"  # To be used for the database
         self._scans: linkedList = linkedList()
-        self._patients_ids: set = set()
+        self._patients_ids: set = set()  # Use a set to avoid duplicates
         self._loaded: bool = False
-        self._coefficient = coefficient
 
         # Getting the path to the DICOMDIR file, if not provided, it will open a file selector.
         if directory is None:
@@ -108,9 +122,8 @@ class Scans:
 
     def load_data(self):
         """
-        Method to load the data from the DICOMDIR file.
-        WARNING: use this method only after the constructor.
-        WARNING: This method is not working yet.
+        Method to load the data from the DICOMDIR file, it will create the Scan objects and store them in the _scans
+        linked list.
         """
 
         def dicom_is_image(dicom_image):
@@ -140,6 +153,7 @@ class Scans:
 
             return patients_scans
 
+        # Start of the function
         nb_picture = 0
         images_not_separated = []
 
@@ -150,7 +164,6 @@ class Scans:
         self._loaded = True
 
         #  Dicomdir is a file that contains a summary of a FIle-Set.
-        # TODO add comments
         dicomdir = pydicom.dcmread(self._dicomdir_path)
 
         for dicom in dicomdir.DirectoryRecordSequence:
@@ -158,15 +171,17 @@ class Scans:
             record = self._dicomdir_path.removesuffix("DICOMDIR")
             if dicom.DirectoryRecordType == "IMAGE":
                 for i in dicom.ReferencedFileID:
-                    record += "/" + i
+                    record += "/" + i  # Get the absolute path to the current DICOM file in the DICOMDIR file.
 
-                image_read = pydicom.dcmread(record)
+                image_read = pydicom.dcmread(record)  # Read the DICOM file in other to extract the image.
 
-                if dicom_is_image(image_read):
+                if dicom_is_image(image_read):  # Check if the DICOM file is an image.
+                    # Remove the localizer and derived images for the Dose Report and Scout Scan
                     if image_read.ImageType[2] != "LOCALIZER" and image_read.ImageType[0] != "DERIVED":
                         nb_picture += 1
                         images_not_separated.append(image_read)
                 else:
+                    # Instead of reading the patient for all the images, we will only read it for Scout and Dose Report
                     try:
                         self._patients_ids.add(image_read.PatientID)
                     except AttributeError:
@@ -217,11 +232,3 @@ class Scans:
         :return: Path to the DICOMDIR file.
         """
         return self._dicomdir_path
-
-    @property
-    def coefficient(self):
-        """
-        Getter for the coefficient used to normalize the data based on the Huddersfield unit
-        :return: Coefficient
-        """
-        return self._coefficient
