@@ -318,222 +318,209 @@ class LinkedList:
 
         self._pointer = self._head
 
+    def __contains__(self, item, arg: str = "None"):
+        """
+        Overloading the in operator to check if an item is in the list.
+        :param item: item that needs to be found in the list
+        :param arg: String that specify data or key. If None it searches for the key
+        :return: boolean
+        """
+        self._pointer = self._head
 
-def __contains__(self, item, arg: str = "None"):
-    """
-    Overloading the in operator to check if an item is in the list.
-    :param item: item that needs to be found in the list
-    :param arg: String that specify data or key. If None it searches for the key
-    :return: boolean
-    """
-    self._pointer = self._head
+        test_contain: bool = False
 
-    test_contain: bool = False
+        if type(item) != str and (arg.lower() == "key" or arg.lower() == "None"):
+            raise TypeError()
 
-    if type(item) != str and (arg.lower() == "key" or arg.lower() == "None"):
-        raise TypeError()
-
-    while self._pointer is not None or test_contain is False:
-        if arg.lower() == "data" and self._pointer.data == item:
-            test_contain = True
-
-        else:
-            if item == self._pointer.key:
+        while self._pointer is not None or test_contain is False:
+            if arg.lower() == "data" and self._pointer.data == item:
                 test_contain = True
 
-    return test_contain
+            else:
+                if item == self._pointer.key:
+                    test_contain = True
 
+        return test_contain
 
-def __next__(self):
-    """
-    Overloading the next operator to iterate through the list.
-    :return: Iterator
-    """
-    self._pointer = self._head
-
-    if self._pointer is None:
+    def __next__(self):
+        """
+        Overloading the next operator to iterate through the list.
+        :return: Iterator
+        """
         self._pointer = self._head
-        raise StopIteration
-    else:
-        self._pointer = self._pointer.next
-        return self._pointer
 
+        if self._pointer is None:
+            self._pointer = self._head
+            raise StopIteration
+        else:
+            self._pointer = self._pointer.next
+            return self._pointer
 
-def __delitem__(self, key: str = None):
-    """
-    Overloading the del operator to delete a node from the list.
-    :param key:
-    :return:
-    """
+    def __delitem__(self, key: str = None):
+        """
+        Overloading the del operator to delete a node from the list.
+        :param key:
+        :return:
+        """
 
-    self._pointer = self._head
+        self._pointer = self._head
 
-    if self._head is None:
-        return
+        if self._head is None:
+            return
 
-    if self._head.key == key:  # If the node to delete is the head
-        self._head = self._head.next
-        self._size -= 1
-        return
-
-    while self._pointer.next is not None:  # Check if the _next of the node pointed is the node to delete
-        if self._pointer.next.key == key:
-            self._pointer.next = self._pointer.next.next
+        if self._head.key == key:  # If the node to delete is the head
+            self._head = self._head.next
             self._size -= 1
             return
-        self._pointer = self._pointer.next
 
-    self._pointer = self._head
-    print("The node does not exist", file=sys.stderr)
+        while self._pointer.next is not None:  # Check if the _next of the node pointed is the node to delete
+            if self._pointer.next.key == key:
+                self._pointer.next = self._pointer.next.next
+                self._size -= 1
+                return
+            self._pointer = self._pointer.next
 
+        self._pointer = self._head
+        print("The node does not exist", file=sys.stderr)
 
-def __getitem__(self, key: str = None):
-    """
-    Overloading the [] operator to get the data of a node.
-    :param key: key of the node.
-    :return: Data of the node. None if the node does not exist.
-    """
+    def __getitem__(self, key: str = None):
+        """
+        Overloading the [] operator to get the data of a node.
+        :param key: key of the node.
+        :return: Data of the node. None if the node does not exist.
+        """
 
-    if key is None:
+        if key is None:
+            return None
+
+        self._pointer = self._head
+
+        while self._pointer is not None:
+            if self._pointer.key == key:
+                pointer = self._pointer
+                self._pointer = self._head
+                return pointer.data
+            self._pointer = self._pointer.next
+
+        self._pointer = self._head
         return None
 
-    self._pointer = self._head
+    def __len__(self):
+        """
+        Overloading the sizeof operator to return the size of the list.
+        :return: Size of the list.
+        """
+        return self._size
 
-    while self._pointer is not None:
-        if self._pointer.key == key:
-            pointer = self._pointer
-            self._pointer = self._head
-            return pointer.data
-        self._pointer = self._pointer.next
+    def __eq__(self, other):
+        """
+        Overloading the == operator to compare two lists.
+        :param other: List to compare with.
+        :return: Boolean
+        """
 
-    self._pointer = self._head
-    return None
+        if type(other) != LinkedList:  # Check if the data object is a LinkedList
+            try:
+                raise TypeError("Cannot compare a LinkedList with a non-LinkedList object.")
+            except TypeError as e:
+                print(e)
+                return False
 
-
-def __len__(self):
-    """
-    Overloading the sizeof operator to return the size of the list.
-    :return: Size of the list.
-    """
-    return self._size
-
-
-def __eq__(self, other):
-    """
-    Overloading the == operator to compare two lists.
-    :param other: List to compare with.
-    :return: Boolean
-    """
-
-    if type(other) != LinkedList:  # Check if the data object is a LinkedList
-        try:
-            raise TypeError("Cannot compare a LinkedList with a non-LinkedList object.")
-        except TypeError as e:
-            print(e)
+        if self._size != other.size:
+            # Check if the two lists have the same size to
+            # avoid unnecessary comparisons and error handling in the _next step
             return False
 
-    if self._size != other.size:
-        # Check if the two lists have the same size to
-        # avoid unnecessary comparisons and error handling in the _next step
-        return False
+        self._pointer = self._head  # Set the pointer to the head of the first list
+        other.pointer = other.head
 
-    self._pointer = self._head  # Set the pointer to the head of the first list
-    other.pointer = other.head
+        while self._pointer is not None:
+            if self._pointer != other.pointer:
+                return False
+            self._pointer = self._pointer.next
+            other.pointer = other.pointer.next
 
-    while self._pointer is not None:
-        if self._pointer != other.pointer:
-            return False
-        self._pointer = self._pointer.next
-        other.pointer = other.pointer.next
+        self._pointer = self._head  # Set the pointer to the head of the first list
+        other.pointer = other.head
 
-    self._pointer = self._head  # Set the pointer to the head of the first list
-    other.pointer = other.head
+        return True
 
-    return True
+    def __ne__(self, other):
+        """
+        Overloading the != operator to compare two lists.
+        :param other:
+        :return:
+        """
+        return not self.__eq__(other)
 
+    def __str__(self):
+        """
+        Overloading the str operator to print the list.
+        :return: String with the list. If show_data is True, it will print the data of the nodes.
+        """
+        if self._head is None:
+            return "List{\t\nSize: 0\nHead: None\n Nodes: None\n}"
 
-def __ne__(self, other):
-    """
-    Overloading the != operator to compare two lists.
-    :param other:
-    :return:
-    """
-    return not self.__eq__(other)
+        string: str = f"List{{\n\tSize:{self._size}\n\tHead: {self._head}\n\tNodes: "
 
+        self._pointer = self._head
 
-def __str__(self):
-    """
-    Overloading the str operator to print the list.
-    :return: String with the list. If show_data is True, it will print the data of the nodes.
-    """
-    if self._head is None:
-        return "List{\t\nSize: 0\nHead: None\n Nodes: None\n}"
+        while self._pointer is not None:
+            string += f"{self._pointer.key} | "
+            string += f"{self._pointer.data}\n"
+            self._pointer = self._pointer.next
 
-    string: str = f"List{{\n\tSize:{self._size}\n\tHead: {self._head}\n\tNodes: "
+        self._pointer = self._head
 
-    self._pointer = self._head
+        return string + "\n}"
 
-    while self._pointer is not None:
-        string += f"{self._pointer.key} | "
-        string += f"{self._pointer.data}\n"
-        self._pointer = self._pointer.next
+    def __repr__(self):
+        """
+        Overloading the repr operator to print the list.
+        :return: String with the list.
+        """
+        if self._head is None:
+            return "List{\t\nSize: 0\nHead: None\n Nodes: None\n}"
 
-    self._pointer = self._head
+        string: str = f"List{{\n\tSize:{self._size}\n\tNodes: "
 
-    return string + "\n}"
+        self._pointer = self._head
 
+        while self._pointer is not None:
+            string += f"{self._pointer.key} - {len(self._pointer)}| "
+            self._pointer = self._pointer.next
 
-def __repr__(self):
-    """
-    Overloading the repr operator to print the list.
-    :return: String with the list.
-    """
-    if self._head is None:
-        return "List{\t\nSize: 0\nHead: None\n Nodes: None\n}"
+        self._pointer = self._head
 
-    string: str = f"List{{\n\tSize:{self._size}\n\tNodes: "
+        return string + "\n}"
 
-    self._pointer = self._head
+    def __iter__(self):
+        """
+        Overloading the iter operator to iterate through the list.
+        :return: Iterator of the list.
+        """
+        return self
 
-    while self._pointer is not None:
-        string += f"{self._pointer.key} - {len(self._pointer)}| "
-        self._pointer = self._pointer.next
+    @property
+    def head(self):
+        """
+        Getter for the head attribute.
+        :return: Head of the list.
+        """
+        return self._head
 
-    self._pointer = self._head
+    @property
+    def pointer(self):
+        """
+        Getter for the pointer attribute.
+        :return: Pointer of the list.
+        """
+        return self._pointer
 
-    return string + "\n}"
-
-
-def __iter__(self):
-    """
-    Overloading the iter operator to iterate through the list.
-    :return: Iterator of the list.
-    """
-    return self
-
-
-@property
-def head(self):
-    """
-    Getter for the head attribute.
-    :return: Head of the list.
-    """
-    return self._head
-
-
-@property
-def pointer(self):
-    """
-    Getter for the pointer attribute.
-    :return: Pointer of the list.
-    """
-    return self._pointer
-
-
-@property
-def size(self):
-    """
-    Getter for the size attribute.
-    :return: Size of the list.
-    """
-    return self._size
+    @property
+    def size(self):
+        """
+        Getter for the size attribute.
+        :return: Size of the list.
+        """
+        return self._size
