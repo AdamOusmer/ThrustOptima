@@ -20,7 +20,6 @@ import numpy as np
 import pydicom
 import os
 import sys
-import scipy.ndimage as ndi
 import cv2
 
 
@@ -32,13 +31,14 @@ class Scans:
     # Start inner class Scan
     class _Scan:
         """
-        Inner Class containing all the function to analyse the image for the opened image.
+        Inner Class containing all the function to analyse each image of the scan individually.
         """
 
-        def __init__(self, image: pydicom.FileDataset = None):
+        def __init__(self, image: pydicom.FileDataset = None, snake_size: int = 500):
             """
             Constructor for the Scan class.
             :param image: pydicom object containing the image.
+            :param snake_size: Size of the snake to be used for the analysis.
             """
             if image is None:
                 raise Ex.ImageEmpty("Image is empty.")
@@ -50,8 +50,9 @@ class Scans:
                     + self._image.RescaleIntercept).clip(min=0, max=255).astype(np.uint8)
             # Here the image is set to HoundsField Unit (HU) and the pixel array is normalized.
 
-            self._pixel_array_shaped: np.array = self.pixel_array_HU
-
+            self._snake: np.array = np.array(
+                (snake_size, 2))  # Each dimension represents the x and y coordinates of the snake
+            # TODO initialize the snake
             self.propensity: float = 0
             self._shaped: bool = False
 
@@ -71,17 +72,10 @@ class Scans:
 
                 # Apply Gaussian blur
                 blurred = cv2.GaussianBlur(gamma_corrected, (5, 5), 1)
-                gray = cv2.cvtColor(blurred, cv2.COLOR_BGR2GRAY)
-
-                # Apply Laplacian filter
-                laplacian = cv2.Laplacian(src=gray, ddepth=1)
-
-                # Convert the result to an 8-bit image
-                self._pixel_array_shaped = np.uint8(np.absolute(laplacian))
 
             self._shaped = True
 
-
+            preprocessing()
 
         def cal_propensity(self):
             """ Function to calculate the propensity of the image that has been contoured. """

@@ -9,4 +9,3 @@ of the dicomdir file when the Scan object is being initialized.
 """
 
 
-
