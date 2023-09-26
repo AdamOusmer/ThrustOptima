@@ -6,7 +6,9 @@
 
 ## Introduction
 
->The goal of this program is to
+>The main purpose of this software is to calculate the propensity of a rocket engine using a CT SCAN. 
+>
+> This
 
 ## Usage
 
