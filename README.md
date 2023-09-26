@@ -1,13 +1,12 @@
 # ThrustOptima
-By Adam Ousmer for [Space Concordia - Rocketry Division](https://spaceconcordia.ca/rocketry)
+>By Adam Ousmer for [Space Concordia - Rocketry Division](https://spaceconcordia.ca/rocketry)
 
-#### Project Status
-    In Development.
+<h1><em> PROJECT IN DEVELOPMENT </em></h1>
 
 
 ## Introduction
 
-    The goal of this program is to 
+>The goal of this program is to
 
 ## Usage
 
