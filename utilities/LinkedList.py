@@ -15,8 +15,8 @@ used to link the the patient's ID to the _scans associated with it.
 
 To make sure that the LinkedList class is used properly, the Node class is defined inside the LinkedList class.
 
-The pointer attribute is reset both at the beginning and at the end of the function that uses it.
-This is done to avoid any error when using the LinkedList class.
+All functions that need a iteration through the LinkedList is done using a temporary pointer initialized to the head of
+the list.
 """
 
 import sys
@@ -151,7 +151,6 @@ class LinkedList:
 
         # Attributes definition
         self._head = None if first_data is None else self._Node(data=first_data, key=first_key)
-        self._pointer = self._head
         self._size: int = 0 if self._head is None else 1
 
         if data_tail is not None:
@@ -161,8 +160,10 @@ class LinkedList:
                 # If the key is not specified, then the key is the size of the list
 
     def find_tail(self):
-        while self._pointer.next is not None:
-            self._pointer = self._pointer.next
+        pointer = self._head
+
+        while pointer.next is not None:
+            pointer = pointer.next
 
     def add(self, data, key: str = "None"):
         """
@@ -171,7 +172,7 @@ class LinkedList:
         :param key: key of the node.
         """
 
-        self._pointer = self._head
+        pointer = self._head
 
         if self._head is None:
             self._head = self._Node(data=data, key=key if key != "None" else str(self._size + 1))
@@ -180,10 +181,8 @@ class LinkedList:
 
         self.find_tail()
 
-        self._pointer._next = self._Node(data=data, key=key if key is not None else str(self._size + 1))
+        pointer._next = self._Node(data=data, key=key if key is not None else str(self._size + 1))
         self._size += 1
-
-        self._pointer = self._head
 
     def add_to_data(self, data, key: str = "None"):
         """
@@ -191,7 +190,7 @@ class LinkedList:
         :param data: Data to be added to the data stored in the node.
         :param key: key of the node.
         """
-        self._pointer = self._head
+        pointer = self._head
 
         if self._head is None:
             raise IndexError("The list is empty")
@@ -200,14 +199,11 @@ class LinkedList:
             self._head.add_to_data_list(data)
             return
 
-        while self._pointer is not None:
-            if self._pointer.key == key:
-                self._pointer.add_to_data_list(data)
-                self._pointer = self._head
+        while pointer is not None:
+            if pointer.key == key:
+                pointer.add_to_data_list(data)
                 return
-            self._pointer = self._pointer.next
-
-        self._pointer = self._head
+            pointer = pointer.next
 
     def modify_data(self, data, key: str = "None"):
         """
@@ -216,19 +212,16 @@ class LinkedList:
         :param key: key of the node.
         """
 
-        self._pointer = self._head
+        pointer = self._head
 
         if self._head is None:
             raise IndexError("The list is empty")
 
-        while self._pointer is not None:
-            if self._pointer.key == key:
-                self._pointer.modify_data(data)
-                self._pointer = self._head
+        while pointer is not None:
+            if pointer.key == key:
+                pointer.modify_data(data)
                 return
-            self._pointer = self._pointer.next
-
-        self._pointer = self._head
+            pointer = pointer.next
 
     def get_node(self, key: str = "None"):
         """
@@ -237,7 +230,7 @@ class LinkedList:
         :return: Node
         """
 
-        self._pointer = self._head
+        pointer = self._head
 
         if self._head is None:
             raise IndexError("The list is empty")
@@ -245,12 +238,11 @@ class LinkedList:
         if self._head.key == key:
             return self._head
 
-        while self._pointer is not None:
-            if self._pointer.key == key:
-                pointer = self._pointer
-                self._pointer = self._head
+        while pointer is not None:
+            if pointer.key == key:
+                pointer = self._head
                 return pointer
-            self._pointer = self._pointer.next
+            pointer = pointer.next
 
     def get_keys(self):
         """
@@ -261,15 +253,13 @@ class LinkedList:
         if self._head is None:
             return None
 
-        self._pointer = self._head
+        pointer = self._head
 
         arr = []
 
-        while self._pointer is not None:
-            arr.append(self._pointer.key)
-            self._pointer = self._pointer.next
-
-        self._pointer = self._head
+        while pointer is not None:
+            arr.append(pointer.key)
+            pointer = pointer.next
 
         return arr
 
@@ -277,29 +267,26 @@ class LinkedList:
         """
         Function to order the data stored in the node by the time the data was taken.
         """
-        self._pointer = self._head
+        pointer = self._head
 
-        while self._pointer is not None:
-            self._pointer.order_data_dicom_time()
-            self._pointer = self._pointer.next
+        while pointer is not None:
+            pointer.order_data_dicom_time()
+            pointer = pointer.next
 
-        self._pointer = self._head
 
     def order_node_data_dicom_time(self, key):
         """
         Function to order the data stored in the node by the time the data was taken.
         """
-        self._pointer = self._head
+        pointer = self._head
 
-        while self._pointer is not None:
-            if self._pointer.key == key:
-                self._pointer.order_data_dicom_time()
-                self._pointer = self._head
+        while pointer is not None:
+            if pointer.key == key:
+                pointer.order_data_dicom_time()
                 return
 
-            self._pointer = self._pointer.next
+            pointer = pointer.next
 
-        self._pointer = self._head
 
     def clear_data_out_of_range(self, clear_all: bool = False, key: str = None):
         """
@@ -308,15 +295,14 @@ class LinkedList:
         :param key: key of the node to clear.
         """
 
-        self._pointer = self._head
+        pointer = self._head
 
-        while self._pointer is not None:
+        while pointer is not None:
 
-            if clear_all or self._pointer.key == key:
-                self._pointer.clear_data_out_of_range()
-            self._pointer = self._pointer.next
+            if clear_all or pointer.key == key:
+                pointer.clear_data_out_of_range()
+            pointer = pointer.next
 
-        self._pointer = self._head
 
     def __contains__(self, item, arg: str = "None"):
         """
@@ -325,19 +311,19 @@ class LinkedList:
         :param arg: String that specify data or key. If None it searches for the key
         :return: boolean
         """
-        self._pointer = self._head
+        pointer = self._head
 
         test_contain: bool = False
 
         if type(item) != str and (arg.lower() == "key" or arg.lower() == "None"):
             raise TypeError()
 
-        while self._pointer is not None or test_contain is False:
-            if arg.lower() == "data" and self._pointer.data == item:
+        while pointer is not None or test_contain is False:
+            if arg.lower() == "data" and pointer.data == item:
                 test_contain = True
 
             else:
-                if item == self._pointer.key:
+                if item == pointer.key:
                     test_contain = True
 
         return test_contain
@@ -347,14 +333,13 @@ class LinkedList:
         Overloading the next operator to iterate through the list.
         :return: Iterator
         """
-        self._pointer = self._head
+        pointer = self._head
 
-        if self._pointer is None:
-            self._pointer = self._head
+        if pointer is None:
             raise StopIteration
         else:
-            self._pointer = self._pointer.next
-            return self._pointer
+            pointer = pointer.next
+            return pointer
 
     def __delitem__(self, key: str = None):
         """
@@ -363,7 +348,7 @@ class LinkedList:
         :return:
         """
 
-        self._pointer = self._head
+        pointer = self._head
 
         if self._head is None:
             return
@@ -373,14 +358,13 @@ class LinkedList:
             self._size -= 1
             return
 
-        while self._pointer.next is not None:  # Check if the _next of the node pointed is the node to delete
-            if self._pointer.next.key == key:
-                self._pointer.next = self._pointer.next.next
+        while pointer.next is not None:  # Check if the _next of the node pointed is the node to delete
+            if pointer.next.key == key:
+                pointer.next = pointer.next.next
                 self._size -= 1
                 return
-            self._pointer = self._pointer.next
+            pointer = pointer.next
 
-        self._pointer = self._head
         print("The node does not exist", file=sys.stderr)
 
     def __getitem__(self, key: str = None):
@@ -393,16 +377,14 @@ class LinkedList:
         if key is None:
             return None
 
-        self._pointer = self._head
+        pointer = self._head
 
-        while self._pointer is not None:
-            if self._pointer.key == key:
-                pointer = self._pointer
-                self._pointer = self._head
+        while pointer is not None:
+            if pointer.key == key:
+                pointer = self._head
                 return pointer.data
-            self._pointer = self._pointer.next
+            pointer = pointer.next
 
-        self._pointer = self._head
         return None
 
     def __len__(self):
@@ -431,16 +413,16 @@ class LinkedList:
             # avoid unnecessary comparisons and error handling in the _next step
             return False
 
-        self._pointer = self._head  # Set the pointer to the head of the first list
+        pointer = self._head  # Set the pointer to the head of the first list
         other.pointer = other.head
 
-        while self._pointer is not None:
-            if self._pointer != other.pointer:
+        while pointer is not None:
+            if pointer != other.pointer:
                 return False
-            self._pointer = self._pointer.next
+            pointer = pointer.next
             other.pointer = other.pointer.next
 
-        self._pointer = self._head  # Set the pointer to the head of the first list
+        pointer = self._head  # Set the pointer to the head of the first list
         other.pointer = other.head
 
         return True
@@ -463,14 +445,12 @@ class LinkedList:
 
         string: str = f"List{{\n\tSize:{self._size}\n\tHead: {self._head}\n\tNodes: "
 
-        self._pointer = self._head
+        pointer = self._head
 
-        while self._pointer is not None:
-            string += f"{self._pointer.key} | "
-            string += f"{self._pointer.data}\n"
-            self._pointer = self._pointer.next
-
-        self._pointer = self._head
+        while pointer is not None:
+            string += f"{pointer.key} | "
+            string += f"{pointer.data}\n"
+            pointer = pointer.next
 
         return string + "\n}"
 
@@ -484,13 +464,11 @@ class LinkedList:
 
         string: str = f"List{{\n\tSize:{self._size}\n\tNodes: "
 
-        self._pointer = self._head
+        pointer = self._head
 
-        while self._pointer is not None:
-            string += f"{self._pointer.key} - {len(self._pointer)}| "
-            self._pointer = self._pointer.next
-
-        self._pointer = self._head
+        while pointer is not None:
+            string += f"{pointer.key} - {len(pointer)}| "
+            pointer = pointer.next
 
         return string + "\n}"
 
@@ -508,14 +486,6 @@ class LinkedList:
         :return: Head of the list.
         """
         return self._head
-
-    @property
-    def pointer(self):
-        """
-        Getter for the pointer attribute.
-        :return: Pointer of the list.
-        """
-        return self._pointer
 
     @property
     def size(self):
