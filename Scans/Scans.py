@@ -76,13 +76,15 @@ class Scans:
                 Function to calculate the Gradient Vector Flow of the image.
                 """
 
-                center = (self._image.Columns // 2, self._image.Rows // 2)
+                center = (self._image.Columns + 100 // 2, self._image.Rows // 2 - 100)
                 # Create theta values
                 theta = np.linspace(0, 2 * np.pi, depth)
 
                 # Create small_snake and large_snake arrays
-                small_snake = np.column_stack((center[0] + 100 * np.cos(theta), center[1] + 100 * np.sin(theta)))
-                large_snake = np.column_stack((center[0] + (self._image.Columns - self._image.Columns / 1.5) * np.cos(theta), center[1] + (self._image.Columns - self._image.Columns / 1.5) * np.sin(theta)))
+                small_snake = np.column_stack(
+                    (center[0] + 100 * np.cos(theta), center[1] + 100 * np.sin(theta))) if multi_snake else None
+                large_snake = np.column_stack((center[0] + (self._image.Columns - self._image.Columns / 1.5) * np.cos(
+                    theta), center[1] + (self._image.Columns - self._image.Columns / 1.5) * np.sin(theta)))
 
                 print(large_snake.max())
 
@@ -103,10 +105,11 @@ class Scans:
 
                 return small_defined_snake, large_defined_snake
 
+            gvf_output = gvf()
+
             if multi_snake:
-                self._edges.append(gvf()[0])
-                self.edge = self._edges[0]
-            self._edges.append(gvf()[1])
+                self._edges.append(gvf_output[0])
+            self._edges.append(gvf_output[1])
 
             self._shaped = True  # Last line of the function to make sure that the image has been shaped correctly.
 
