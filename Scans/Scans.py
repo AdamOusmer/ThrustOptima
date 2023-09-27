@@ -76,7 +76,7 @@ class Scans:
                 Function to calculate the Gradient Vector Flow of the image.
                 """
 
-                center = (self._image.Columns + 100 // 2, self._image.Rows // 2 - 100)
+                center = (self._image.Columns// 2, self._image.Rows // 2)
                 # Create theta values
                 theta = np.linspace(0, 2 * np.pi, depth)
 
