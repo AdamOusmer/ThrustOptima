@@ -1,6 +1,6 @@
 """
 ******************************************************************
-Copyright Adam Ousmer for Space Concordia: Rocketry Division 2023
+Copyright Adam Ousmer for Space Concordia - Rocketry Division 2023
 All Rights Reserved.
 ******************************************************************
 
@@ -9,6 +9,8 @@ This module controls the flow of the program
 
 from Scans.Scans import Scans
 from tqdm import tqdm
+import matplotlib.pyplot as plt
+import time
 
 
 def load_existing_scans():
@@ -24,5 +26,12 @@ Scans = Scans("FirstScan")
 Scans.load_data()
 i = 0
 for j in tqdm(Scans.scans._head.data[40 if Scans.scans._head.key == "FLASH" else 500:]):
-    for k in j.pixel_array_HU:
-        print(k)
+    j.shaping()
+
+    fig, ax = plt.subplots(figsize=(7, 7))
+    ax.imshow(j.pixel_array_HU, cmap="gray")
+    ax.plot((j._edges[1])[:, 1], (j._edges[1])[:, 0], '-b', lw=3)
+    ax.set_xticks([]), ax.set_yticks([])
+    ax.axis([0, j.pixel_array_HU.shape[1], j.pixel_array_HU.shape[0], 0])
+
+    plt.show()

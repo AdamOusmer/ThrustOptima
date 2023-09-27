@@ -1,6 +1,6 @@
 """
 ******************************************************************
-Copyright Adam Ousmer for Space Concordia: Rocketry Division 2023
+Copyright Adam Ousmer for Space Concordia - Rocketry Division 2023
 All Rights Reserved.
 ******************************************************************
 
@@ -17,10 +17,11 @@ from tkinter import filedialog
 from utilities.LinkedList import LinkedList as linkedList
 import Exceptions.Exceptions as Ex
 import numpy as np
+import skimage as ski
+import matplotlib.pyplot as plt
 import pydicom
 import os
 import sys
-import cv2
 
 
 class Scans:
@@ -34,48 +35,80 @@ class Scans:
         Inner Class containing all the function to analyse each image of the scan individually.
         """
 
-        def __init__(self, image: pydicom.FileDataset = None, snake_size: int = 500):
+        def __init__(self, image: pydicom.FileDataset = None):
             """
             Constructor for the Scan class.
             :param image: pydicom object containing the image.
-            :param snake_size: Size of the snake to be used for the analysis.
             """
             if image is None:
                 raise Ex.ImageEmpty("Image is empty.")
 
             self._image: pydicom.FileDataset = image
 
-            self.pixel_array_HU = (
+            self.pixel_array_HU: np.array = (
                     self._image.pixel_array * self._image.RescaleSlope
                     + self._image.RescaleIntercept).clip(min=0, max=255).astype(np.uint8)
             # Here the image is set to HoundsField Unit (HU) and the pixel array is normalized.
 
-            self._snake: np.array = np.array(
-                (snake_size, 2))  # Each dimension represents the x and y coordinates of the snake
-            # TODO initialize the snake
-            self.propensity: float = 0
-            self._shaped: bool = False
+            self._edges: list = []
+            self.edge = None
 
-        def shaping(self):
+            self.propensity: float = 0
+            self._shaped: bool = False  # Used to check if the image has been shaped before calculating the propensity.
+
+        def shaping(self, depth: int = 250, multi_snake: bool = True):
             """
             Function to find the contour of object scanned and save it in the self.pixel_array_shaped.
-            TODO do the function in the scan class
+            :param depth: Size of the snake that will be used to find the contour.
+            :param multi_snake: If True, the snake will be used to find an internal contour.
             """
 
             def preprocessing():
                 """
-                Function to apply a gaussian blur to the image.
+                Function to process the image using the Gradient Vector Flow algorithm.
+                return: The image preprocessed.
                 """
-                # Apply gamma augmentation
-                gamma_corrected = np.power(self.pixel_array_HU / 255.0, 1)
-                gamma_corrected = np.uint8(gamma_corrected * 255.0)
 
-                # Apply Gaussian blur
-                blurred = cv2.GaussianBlur(gamma_corrected, (5, 5), 1)
+                return ski.filters.gaussian(self.pixel_array_HU, sigma=1, preserve_range=True)
 
-            self._shaped = True
+            def gvf():
+                """
+                Function to calculate the Gradient Vector Flow of the image.
+                """
 
-            preprocessing()
+                center = (self._image.Columns // 2, self._image.Rows // 2)
+                # Create theta values
+                theta = np.linspace(0, 2 * np.pi, depth)
+
+                # Create small_snake and large_snake arrays
+                small_snake = np.column_stack((center[0] + 100 * np.cos(theta), center[1] + 100 * np.sin(theta)))
+                large_snake = np.column_stack((center[0] + (self._image.Columns - self._image.Columns / 1.5) * np.cos(theta), center[1] + (self._image.Columns - self._image.Columns / 1.5) * np.sin(theta)))
+
+                print(large_snake.max())
+
+                fig, ax = plt.subplots(figsize=(7, 7))
+                ax.imshow(self.pixel_array_HU, cmap="gray")
+                ax.plot(large_snake[:, 1], large_snake[:, 0], '-b', lw=3)
+                ax.set_xticks([]), ax.set_yticks([])
+                ax.axis([0, self.pixel_array_HU.shape[1], self.pixel_array_HU.shape[0], 0])
+
+                plt.show()
+
+                blurred = preprocessing()
+
+                small_defined_snake = ski.segmentation.active_contour(blurred, small_snake, alpha=0.015, beta=5,
+                                                                      gamma=0.01) if multi_snake else None
+                large_defined_snake = ski.segmentation.active_contour(blurred, large_snake, alpha=10, beta=20,
+                                                                      gamma=0.01)
+
+                return small_defined_snake, large_defined_snake
+
+            if multi_snake:
+                self._edges.append(gvf()[0])
+                self.edge = self._edges[0]
+            self._edges.append(gvf()[1])
+
+            self._shaped = True  # Last line of the function to make sure that the image has been shaped correctly.
 
         def cal_propensity(self):
             """ Function to calculate the propensity of the image that has been contoured. """
@@ -153,7 +186,6 @@ class Scans:
 
         if self._loaded:
             raise Ex.AlreadyLoaded("This instance is already _loaded.")
-            # TODO add a way to unload the instance if the user wants to.
 
         self._loaded = True
 
