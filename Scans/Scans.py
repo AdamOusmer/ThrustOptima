@@ -22,6 +22,7 @@ import matplotlib.pyplot as plt
 import pydicom
 import os
 import sys
+import cv2
 
 
 class Scans:
@@ -47,12 +48,11 @@ class Scans:
 
             self.pixel_array_HU: np.array = (
                     self._image.pixel_array * self._image.RescaleSlope
-                    + self._image.RescaleIntercept).clip(min=0, max=255).astype(np.uint8)
+                    + self._image.RescaleIntercept).clip(min=0, max=1).astype(np.uint8)
             # Here the image is set to HoundsField Unit (HU) and the pixel array is normalized.
 
             self._edges: list = []
-            self.edge = None
-
+            
             self.propensity: float = 0
             self._shaped: bool = False  # Used to check if the image has been shaped before calculating the propensity.
 
@@ -69,6 +69,8 @@ class Scans:
                 return: The image preprocessed.
                 """
 
+                cv2.Sobel(self.pixel_array_HU, 6, 1, 0, ksize=5)
+
                 return ski.filters.gaussian(self.pixel_array_HU, sigma=1, preserve_range=True)
 
             def gvf():
@@ -76,7 +78,7 @@ class Scans:
                 Function to calculate the Gradient Vector Flow of the image.
                 """
 
-                center = (self._image.Columns// 2, self._image.Rows // 2)
+                center = (self._image.Columns // 2, self._image.Rows // 2)
                 # Create theta values
                 theta = np.linspace(0, 2 * np.pi, depth)
 
@@ -85,8 +87,6 @@ class Scans:
                     (center[0] + 100 * np.cos(theta), center[1] + 100 * np.sin(theta))) if multi_snake else None
                 large_snake = np.column_stack((center[0] + (self._image.Columns - self._image.Columns / 1.5) * np.cos(
                     theta), center[1] + (self._image.Columns - self._image.Columns / 1.5) * np.sin(theta)))
-
-                print(large_snake.max())
 
                 fig, ax = plt.subplots(figsize=(7, 7))
                 ax.imshow(self.pixel_array_HU, cmap="gray")

@@ -1,0 +1,28 @@
+* {
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    list-style: none;
+
+    font-family: 'Playfair Display', sans-serif;
+    letter-spacing: 0.15rem;
+
+    color: #EEF1EF;
+}
+
+@font-face {
+    font-family: 'Playfair Display';
+    src: url('../Fonts/Playfair_Display-2/static/PlayfairDisplay-Regular.ttf');
+}
+
+body {
+    background-color: #101012;
+
+    height: 100vh;
+    overflow-y: hidden;
+}
+
+header h1, header h3 {
+    text-align: center;
+    font-weight: lighter;
+}
