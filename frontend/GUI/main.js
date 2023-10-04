@@ -21,7 +21,13 @@ function createWindow() {
 app.on('ready', createWindow);
 
 app.on('window-all-closed', function () {
-    if (process.platform !== 'darwin') app.quit();
+
+    const activeHandles = process.getProcessMemoryInfo()
+    console.log(activeHandles);
+
+    app.exit(0);
+    process.exit(0)
+
 });
 
 app.on('activate', function () {

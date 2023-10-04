@@ -14,8 +14,8 @@ easily access the data and separate the data from the analysis.
 """
 
 from tkinter import filedialog
-from utilities.LinkedList import LinkedList as linkedList
-import Exceptions.Exceptions as Ex
+from backend.utilities.LinkedList import LinkedList as linkedList
+from backend.Exceptions import Exceptions as Ex
 import numpy as np
 import skimage as ski
 import matplotlib.pyplot as plt
