@@ -11,15 +11,10 @@
 # Editor directories and files
 .idea
 
-# Mac files
-.DS_Store
-
 # .lock files
 *.lock
 
-# binaries
-*.pyc
-
 out
+
 .DS_Store
 *.pyc
