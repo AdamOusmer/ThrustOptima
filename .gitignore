@@ -14,14 +14,7 @@
 # Mac files
 .DS_Store
 
-# .json files
-*.json
-
 # .lock files
 *.lock
-
-# git
-.gitignore
-.gitattributes
 
 out
