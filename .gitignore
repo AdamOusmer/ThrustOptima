@@ -21,3 +21,5 @@
 *.pyc
 
 out
+.DS_Store
+*.pyc
