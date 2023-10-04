@@ -10,7 +10,7 @@ header {
     height: 100vh;
 }
 
-div {
+.header_text {
     display: flex;
 
     flex-direction: column;
@@ -19,7 +19,7 @@ div {
 
 }
 
-div h1 {
+.header_text h1 {
     font-size: clamp(2rem, 5vw, 3rem);
 }
 
