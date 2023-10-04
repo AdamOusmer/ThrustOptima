@@ -17,4 +17,7 @@
 # .lock files
 *.lock
 
+# binaries
+*.pyc
+
 out
