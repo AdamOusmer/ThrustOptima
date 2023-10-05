@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const {app, BrowserWindow, ipcMain} = require('electron');
 const path = require('path');
 
 let mainWindow;
@@ -8,12 +8,13 @@ function createWindow() {
         width: 800,
         height: 600,
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true,
+            preload: path.join(__dirname, 'js/DOM.js') // Updated preload path
         }
     });
 
     // Load the index.html file
-    mainWindow.loadFile(path.join(__dirname, 'index.html'));
+    mainWindow.loadFile(path.join(__dirname, 'html/index.html'));
 
     mainWindow.on('closed', () => {
         mainWindow = null;
@@ -28,4 +29,9 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
     if (mainWindow === null) createWindow();
+});
+
+ipcMain.on('hotspot-event', (event, arg) => {
+    event.returnValue = 'Message received!'
+    require('electron').shell.openExternal(`https://explorer.helium.com/hotspots/${arg}`);
 });
