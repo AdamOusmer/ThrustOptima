@@ -13,6 +13,8 @@ The LinkedList class is used to store the patient's IDs and the _scans associate
 easily access the data and separate the data from the analysis.
 """
 
+# TODO add load function from database
+
 from tkinter import filedialog
 from backend.utilities.LinkedList import LinkedList as linkedList
 from backend.Exceptions import Exceptions as Ex
@@ -154,6 +156,12 @@ class Scans:
         """
         Method to load the data from the DICOMDIR file, it will create the Scan objects and store them in the _scans
         linked list.
+
+        This function will also order the patients per PatientID and by InstanceNumber.
+
+        :raises AlreadyLoaded: If the data has already been loaded.
+        :raises AttributeError: If the DICOM file does not contain a PatientID.
+        :raises Exception: If an unknown error occurs while reading the PatientID.
         """
 
         def dicom_is_image(dicom_image):
@@ -215,8 +223,6 @@ class Scans:
                         self._patients_ids.add(image_read.PatientID)
                     except AttributeError:
                         print("No PatientID found.")
-                    except Exception:  # TODO: Find a way to select all the exceptions that can be raised.
-                        print("Error while reading the PatientID.")
 
         self._scans = order_array_per_patients(images_not_separated)
 

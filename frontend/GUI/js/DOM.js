@@ -1,3 +1,5 @@
+// Script to open external links in the default browser instead of a new electron window
+
 const { shell } = require('electron');
 
 window.api = require('electron').ipcRenderer;
@@ -8,10 +10,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     links.forEach(link => {
         link.addEventListener('click', (event) => {
-            event.preventDefault(); // Prevent default behavior (opening in the same window)
+            event.preventDefault();
 
             const url = link.getAttribute('href');
-            shell.openExternal(url); // Open link in external browser
+            shell.openExternal(url);
         });
     });
 });
