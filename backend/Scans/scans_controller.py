@@ -7,7 +7,7 @@ All Rights Reserved.
 This module controls the flow of the program
 """
 
-from Scans.Scans import Scans
+from scans import Scans
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 

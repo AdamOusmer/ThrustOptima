@@ -36,8 +36,8 @@ section {
 }
 
 section input {
-    width: clamp(50px, 5vw, 100px);
-    height: clamp(20px, 5vh, 30px);
+    width: clamp(70px, 5vw, 120px);
+    height: clamp(30px, 5vh, 50px);
 
     background: #101012;
     color: #EEF1EF;
