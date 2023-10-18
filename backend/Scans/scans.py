@@ -16,8 +16,8 @@ easily access the data and separate the data from the analysis.
 # TODO add load function from database
 
 from tkinter import filedialog
-from backend.utilities.linked_list import LinkedList as linkedList
-from backend.Exceptions import Exceptions as Ex
+from .utilities.linked_list import LinkedList as linkedList
+from .Exceptions import Exceptions as Ex
 import numpy as np
 import skimage as ski
 import matplotlib.pyplot as plt

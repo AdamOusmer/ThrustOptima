@@ -15,6 +15,9 @@ easily access the data and separate the data from the analysis.
 
 from flask import Flask
 
+from Scans.scans_controller import Controller
+
+
 app = Flask(__name__)
 
 
@@ -22,6 +25,15 @@ app = Flask(__name__)
 def index():
     """
     Entry point of the program
+    :return: None
+    """
+    return "Hello World!"
 
+
+def close():
+    """
+    Exit point of the program. This function will be called when the user closes the program to ensure that all
+    resources are properly closed and saved.
+    :return: None
     """
     pass
