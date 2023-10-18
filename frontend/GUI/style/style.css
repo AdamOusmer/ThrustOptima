@@ -38,6 +38,7 @@ body {
 
 }
 
-.header_text h1 {
+h1 {
+    text-align: center;
     font-size: clamp(2rem, 5vw, 3rem);
 }

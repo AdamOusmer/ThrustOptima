@@ -1,7 +1,56 @@
+main {
+    gap: 5vh;
+}
+
 header {
     flex: 1;
 }
 
+
 section {
     flex: 9;
+}
+
+section .select {
+    height: 60vh;
+    width: 60vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50px;
+    border: 1px solid #EEF1EF;
+
+    background: #101012;
+    box-shadow: 16px 16px 32px #060607,
+    -16px -16px 32px #1a1a1d;
+}
+
+section {
+    width: 60vw;
+    display: flex;
+
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+section input {
+    width: clamp(50px, 5vw, 100px);
+    height: clamp(20px, 5vh, 30px);
+
+    background: #101012;
+    color: #EEF1EF;
+    border: 1px solid #EEF1EF;
+    border-radius: 20px;
+
+    cursor: pointer;
+    outline: none;
+
+    transition: 400ms ease-in-out;
+}
+
+section input:hover {
+    background: #EEF1EF;
+    color: #101012;
 }
