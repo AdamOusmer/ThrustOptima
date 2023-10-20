@@ -1,32 +1,51 @@
 # ThrustOptima
->By Adam Ousmer for [Space Concordia - Rocketry Division](https://spaceconcordia.ca/rocketry)
+>By [Adam Ousmer](https://github.com/AdamOusmer) for [Space Concordia - Rocketry Division](https://spaceconcordia.ca/rocketry)
 
-<h1><em> PROJECT IN DEVELOPMENT </em></h1>
+## _PROJECT IN DEVELOPMENT_
 
 
 ## Introduction
 
->The main purpose of this software is to calculate the propensity of a rocket engine using a CT SCAN. 
+> The main purpose of this software is to calculate the propensity of a rocket engine using a CT SCAN. 
 >
->The software will be able to:
+> The software will be able to:
 > 
-><li>   Calculate the propensity of every scan read from a DICOMDIR file.</li>
-><li>   Determine the edges of any objects that contain one external edge and an optional internal edge.</li>
+> - Calculate the propensity of every scan read from a DICOMDIR file.
+> - Determine the edges of any objects that contain one external edge and an optional internal edge.
+
+> _Future updates_
+> - This software is using a custom .thst file for boot and user's options and .optm files to save user's data.
+> - 3D rendering of the CT scan.
+
+
+## Installation
+
+> _Available soon_
 
 ## Usage
 
+> _Available soon_
 
 ## Dependencies
-> This software is a Electron, Flask, Waitress WSGI and Python 3.11 project.
+> This software is an [Electron](https://www.electronjs.org), [Flask](https://flask.palletsprojects.com/en/3.0.x/), [Waitress WSGI](https://pypi.org/project/waitress/) and [Python](https://www.python.org) 3.11 project.
 > 
 > It uses the following libraries:
-> <li> [Pydicom](https://pydicom.github.io/pydicom/dev/index.html#)</li>
-> <li> [Numpy](https://numpy.org/doc/)</li>
+> - [Pydicom](https://pydicom.github.io/pydicom/dev/index.html#)
+> - [Numpy](https://numpy.org/doc/)
+> - [TKinter](https://docs.python.org/3/library/tkinter.html)
+> - [Matplotlib](https://matplotlib.org/stable/contents.html)
+> - [OpenCV](https://docs.opencv.org/master/)
 
+
+## Credits
+
+> Font :
+> - [Playfair-Display](https://github.com/clauseggers/Playfair-Display)
 
 ## License
 
+> This project has been developed by [Adam Ousmer](https://github.com/AdamOusmer) for the exclusive usage of [Space Concordia - Rocketry Division](https://spaceconcordia.ca/rocketry).
+
 ## References
 
-
- 
+> _Available soon_
