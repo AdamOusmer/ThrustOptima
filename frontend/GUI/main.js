@@ -1,9 +1,21 @@
+/*
+*
+* ******************************************************************
+* Copyright Adam Ousmer for Space Concordia - Rocketry Division 2023
+* All Rights Reserved.
+* ******************************************************************
+*
+*/
+
 const {app, BrowserWindow, ipcMain} = require('electron');
 const path = require('path');
-const {spawn} = require('child_process');
+const {spawn, exec} = require('child_process');
+const {fs} = require("node:fs");
+
 
 let mainWindow;
-let flaskProcess;
+let serverProcess;
+
 
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -25,24 +37,62 @@ function createWindow() {
     });
 }
 
-app.on('ready', () => {
+function boot() {
+    // Install Python requirements only at the first boot
 
-    console.log(path.join(__dirname, '../../backend/thrust_optima.py'))
+    // Create a .thst file in the root directory if it doesn't exist
+    // If it does exist, then don't install Python requirements
 
-    flaskProcess = spawn('python3', [path.join(__dirname, '../../backend/thrust_optima.py')]);
 
 
-    flaskProcess.stdout.on('data', (data) => {
+    const installCommand = 'pip3 install -r ../../backend/requirements.txt';
+
+    exec(installCommand, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`error: ${error.message}`);
+            return;
+        }
+
+        if (stderr) {
+            console.error(`stderr: ${stderr}`);
+            return;
+        }
+
+        console.log(`Python dependencies installed successfully.`);
+
+    });
+    // Start Flask server
+
+    serverProcess = spawn('python3', [path.join(__dirname, '../../backend/production_server.py')]);
+
+    console.log("setting")
+    console.log(serverProcess.stdout.on)
+
+    serverProcess.stdout.on('data', (data) => {
+        console.error("this")
         console.log(`stdout: ${data}`);
     });
 
-    flaskProcess.stderr.on('data', (data) => {
+}
+
+app.on('ready', () => {
+
+    boot()
+
+    // Install Python requirements
+
+    console.log("set")
+
+    serverProcess.stderr.on('data', (data) => {
+        console.error("that")
         console.error(`stderr: ${data}`);
     });
 
-    flaskProcess.on('close', (code) => {
+    serverProcess.on('close', (code) => {
         console.log(`Flask process exited with code ${code}`);
     });
+
+    // Create the browser window
 
     createWindow();
 });
@@ -56,9 +106,7 @@ app.on('activate', () => {
 });
 
 app.on('before-quit', () => {
-    flaskProcess.close();
-    mainWindow.removeAllListeners('close');
-    mainWindow.close();
+    process.kill(pid, 'SIGTERM');
 });
 
 ipcMain.on('hotspot-event', (event, arg) => {

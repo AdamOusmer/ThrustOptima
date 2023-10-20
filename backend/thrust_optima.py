@@ -4,21 +4,20 @@ Copyright Adam Ousmer for Space Concordia - Rocketry Division 2023
 All Rights Reserved.
 ******************************************************************
 
-This module contains the definition of the Scans class.
+This module contains the definition of the Flask application that will be used as the backend for the thrust_optima
+project. It will run on the WSGI server and will be used to communicate with the Electron frontend. It will also be
+used to communicate with the database.
 
-The Scans class is the main analysis class. It contains all the functions to open and analyze the DICOMDIR file.
-It also contains the definition of the Scan inner class, which is used to store the data of each scan independently.
-
-The LinkedList class is used to store the patient's IDs and the _scans associated with it in order to be able to
-easily access the data and separate the data from the analysis.
+This module will also contain the entry point of the program and it will control the lifecycle of the software.
 """
-
 from flask import Flask
+import sys
+import signal
 
 from Scans.scans_controller import Controller
 
-
 app = Flask(__name__)
+controller = Controller()
 
 
 @app.route('/')
@@ -27,13 +26,21 @@ def index():
     Entry point of the program
     :return: None
     """
-    return "Hello World!"
+    print("Hello World!")
+    return "Set"
 
 
+@app.route('/cleanup', methods=['POST'])
 def close():
     """
     Exit point of the program. This function will be called when the user closes the program to ensure that all
     resources are properly closed and saved.
     :return: None
     """
-    pass
+    print("Closing...")
+    sys.stdout.flush()
+
+    return "Closed"
+
+
+signal.signal(signal.SIGTERM, close())
