@@ -17,7 +17,12 @@
 
 
 ## Dependencies
->The software depend on Electron to run the standalone application.
+> This software is a Electron, Flask, Waitress WSGI and Python 3.11 project.
+> 
+> It uses the following libraries:
+> <li> [Pydicom](https://pydicom.github.io/pydicom/dev/index.html#)</li>
+> <li> [Numpy](https://numpy.org/doc/)</li>
+
 
 ## License
 
