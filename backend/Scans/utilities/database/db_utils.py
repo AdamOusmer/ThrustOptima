@@ -9,9 +9,6 @@ This module contains the definition of the Database class.
 # TODO: Add docstrings
 """
 
-import sqlite3
-import sys
-
 
 class Database:
 
@@ -37,4 +34,3 @@ class Database:
 
         if data is None:
             raise ValueError("invalid data name")
-

@@ -90,14 +90,6 @@ class Scans:
                 large_snake = np.column_stack((center[0] + (self._image.Columns - self._image.Columns / 1.5) * np.cos(
                     theta), center[1] + (self._image.Columns - self._image.Columns / 1.5) * np.sin(theta)))
 
-                fig, ax = plt.subplots(figsize=(7, 7))
-                ax.imshow(self.pixel_array_HU, cmap="gray")
-                ax.plot(large_snake[:, 1], large_snake[:, 0], '-b', lw=3)
-                ax.set_xticks([]), ax.set_yticks([])
-                ax.axis([0, self.pixel_array_HU.shape[1], self.pixel_array_HU.shape[0], 0])
-
-                plt.show()
-
                 blurred = preprocessing()
 
                 small_defined_snake = ski.segmentation.active_contour(blurred, small_snake, alpha=0.015, beta=5,

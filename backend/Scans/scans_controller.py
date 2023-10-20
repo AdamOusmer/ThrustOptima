@@ -20,11 +20,11 @@ class Controller:
         self._scans = None
 
         if restore_state:
-            self.restore_state()
+            self.restore_scan()
         else:
-            self._scans = scans.Scans()
+            self._scans = None
 
-    def load_existing_scans(self, name: str = None):
+    def restore_scan(self, name: str = None):
         """
         This function will load an existing scan from the database.
         :raises ValueError: If the name is empty or None
@@ -33,8 +33,8 @@ class Controller:
         if not name.strip() or name is None:
             raise ValueError("Name cannot be empty")
 
-    def restore_state(self, path: str = None):
-        pass
-
         def restore_scan(path: str = None):
             pass
+
+    def save_state(self, path: str = None):
+        pass

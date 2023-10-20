@@ -1,3 +1,12 @@
+/*
+*
+* ******************************************************************
+* Copyright Adam Ousmer for Space Concordia - Rocketry Division 2023
+* All Rights Reserved.
+* ******************************************************************
+*
+*/
+
 // Script to open external links in the default browser instead of a new electron window
 
 const { shell } = require('electron');
