@@ -16,7 +16,7 @@ to ensure that the output is sent to the frontend in real time.
 
 from flask import Flask
 import sys
-import signal
+import json
 
 from Scans.scans_controller import Controller
 
@@ -57,6 +57,3 @@ def close():
     sys.stdout.flush()
 
     return "Closed"
-
-
-signal.signal(signal.SIGTERM, close())

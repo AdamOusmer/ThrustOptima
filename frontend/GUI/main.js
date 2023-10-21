@@ -10,7 +10,8 @@
 const {app, BrowserWindow, ipcMain} = require('electron');
 const path = require('path');
 const {spawn, exec} = require('child_process');
-const {fs} = require("node:fs");
+const axios = require('axios');
+const boot = require('./js/database/boot.js');
 
 
 let mainWindow;
@@ -38,37 +39,10 @@ function createWindow() {
     });
 }
 
-function boot() {
-    // Function that will check for Python dependencies and install them if they are not installed
-    // This function will also read the .thst file and check for user settings
-
-    // Create a .thst file in the root directory if it doesn't exist
-    // If it does exist, then don't install Python requirements
-
-
-
-    const installCommand = 'pip3 install -r ../../backend/requirements.txt';
-
-    exec(installCommand, (error, stdout, stderr) => {
-        if (error) {
-            console.error(`error: ${error.message}`);
-            return;
-        }
-
-        if (stderr) {
-            console.error(`stderr: ${stderr}`);
-            return;
-        }
-
-        console.log(`Python dependencies installed successfully.`);
-
-    });
-
-}
-
 app.on('ready', () => {
 
-    boot()
+
+    boot.boot();
 
     // Install Python requirements
 
@@ -81,7 +55,6 @@ app.on('ready', () => {
     });
 
     serverProcess.stderr.on('data', (data) => {
-        console.error("that")
         console.error(`stderr: ${data}`);
     });
 
@@ -103,7 +76,13 @@ app.on('activate', () => {
 });
 
 app.on('before-quit', () => {
-    process.kill(serverProcess.pid, 'SIGTERM');
+    axios.post('http://localhost:5000/cleanup')
+        .then(response => {
+            console.log(response.data);
+        })
+        .catch(error => {
+            console.error(error);
+        });
 });
 
 ipcMain.on('hotspot-event', (event, arg) => {
