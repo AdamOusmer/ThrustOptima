@@ -16,6 +16,7 @@ const boot = require('./js/database/boot.js');
 
 let mainWindow;
 let serverProcess;
+let port = 5000;
 
 
 // Create the browser window and load the index.html file
@@ -48,10 +49,14 @@ app.on('ready', () => {
 
     // Start Flask server
 
-    serverProcess = spawn('python3', [path.join(__dirname, '../../backend/production_server.py')]);
+    serverProcess = spawn('python3', [path.join(__dirname, '../../backend/thrust_optima.py')]);
 
     serverProcess.stdout.on('data', (data) => {
-        console.log(`stdout: ${data}`);
+        if (data.includes('port=')) {
+            port = data.replace('port=', '');
+        } else {
+            console.log(`stdout: ${data}`);
+        }
     });
 
     serverProcess.stderr.on('data', (data) => {
@@ -61,6 +66,10 @@ app.on('ready', () => {
     serverProcess.on('close', (code) => {
         console.log(`Flask process exited with code ${code}`);
     });
+
+    // Update the port used by the Flask server
+
+
 
     // Create the browser window
 
@@ -76,7 +85,7 @@ app.on('activate', () => {
 });
 
 app.on('before-quit', () => {
-    axios.post('http://localhost:5000/cleanup')
+    axios.post(`http://localhost:${port}/cleanup`)
         .then(response => {
             console.log(response.data);
         })

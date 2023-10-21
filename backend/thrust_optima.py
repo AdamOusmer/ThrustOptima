@@ -15,13 +15,17 @@ to ensure that the output is sent to the frontend in real time.
 """
 
 from flask import Flask
+from waitress import serve
+
 import sys
+import socket
 import json
 
 from Scans.scans_controller import Controller
 
 app = Flask(__name__)
 controller = Controller()
+port = None
 
 
 @app.route('/')
@@ -30,7 +34,9 @@ def index():
     Entry point of the program
     :return: None
     """
-    return "Hello World!"
+    print("port=" + str(port))
+    sys.stdout.flush()
+    return port
 
 
 @app.route('/load', methods=['POST'])
@@ -57,3 +63,30 @@ def close():
     sys.stdout.flush()
 
     return "Closed"
+
+
+# Waitress server
+
+def find_available_port():
+    """
+    This function will find an available port to run the server on.
+    :return: The port number
+    """
+
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.bind(('', 0))
+    new_port = sock.getsockname()[1]
+    sock.close()
+
+    return new_port
+
+
+if __name__ == '__main__':
+    print("Starting server...", file=sys.stdout)
+    sys.stdout.flush()
+    try:
+        serve(app, host='localhost', port=5000)
+    except OSError as e:
+        if e.errno == 98:
+            port = find_available_port()
+            serve(app, host='localhost', port=port)
