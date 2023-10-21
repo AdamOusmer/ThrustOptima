@@ -9,7 +9,11 @@ project. It will run on the WSGI server and will be used to communicate with the
 used to communicate with the database.
 
 This module will also contain the entry point of the program and it will control the lifecycle of the software.
+
+To allow the frontend to access the console output, at the end of each method, the stdout buffer will be flushed
+to ensure that the output is sent to the frontend in real time.
 """
+
 from flask import Flask
 import sys
 import signal
@@ -26,8 +30,20 @@ def index():
     Entry point of the program
     :return: None
     """
-    print("Hello World!")
-    return "Set"
+    return "Hello World!"
+
+
+@app.route('/load', methods=['POST'])
+def load(path: str = None):
+    """
+    This function will load an existing scan from the database.
+    :raises ValueError: If the name is empty or None
+    """
+
+    if not path.strip() or path is None:
+        raise ValueError("Path cannot be empty")
+
+    controller.restore_scan(path)
 
 
 @app.route('/cleanup', methods=['POST'])

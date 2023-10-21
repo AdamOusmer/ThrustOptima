@@ -17,6 +17,7 @@ let mainWindow;
 let serverProcess;
 
 
+// Create the browser window and load the index.html file
 function createWindow() {
     mainWindow = new BrowserWindow({
         width: 800,
@@ -38,7 +39,8 @@ function createWindow() {
 }
 
 function boot() {
-    // Install Python requirements only at the first boot
+    // Function that will check for Python dependencies and install them if they are not installed
+    // This function will also read the .thst file and check for user settings
 
     // Create a .thst file in the root directory if it doesn't exist
     // If it does exist, then don't install Python requirements
@@ -61,17 +63,6 @@ function boot() {
         console.log(`Python dependencies installed successfully.`);
 
     });
-    // Start Flask server
-
-    serverProcess = spawn('python3', [path.join(__dirname, '../../backend/production_server.py')]);
-
-    console.log("setting")
-    console.log(serverProcess.stdout.on)
-
-    serverProcess.stdout.on('data', (data) => {
-        console.error("this")
-        console.log(`stdout: ${data}`);
-    });
 
 }
 
@@ -81,7 +72,13 @@ app.on('ready', () => {
 
     // Install Python requirements
 
-    console.log("set")
+    // Start Flask server
+
+    serverProcess = spawn('python3', [path.join(__dirname, '../../backend/production_server.py')]);
+
+    serverProcess.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+    });
 
     serverProcess.stderr.on('data', (data) => {
         console.error("that")
@@ -106,7 +103,7 @@ app.on('activate', () => {
 });
 
 app.on('before-quit', () => {
-    process.kill(pid, 'SIGTERM');
+    process.kill(serverProcess.pid, 'SIGTERM');
 });
 
 ipcMain.on('hotspot-event', (event, arg) => {
