@@ -20,7 +20,6 @@ from .utilities.linked_list import LinkedList as linkedList
 from .Exceptions import Exceptions as Ex
 import numpy as np
 import skimage as ski
-import matplotlib.pyplot as plt
 import pydicom
 import os
 import sys
