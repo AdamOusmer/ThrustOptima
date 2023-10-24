@@ -19,6 +19,8 @@ const boot = require('./js/boot.js');
 let mainWindow;
 let serverProcess;
 
+let port = "5000"
+
 
 // Create the browser window and load the index.html file
 function createWindow() {
@@ -53,11 +55,15 @@ app.on('ready', () => {
     serverProcess.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);
 
+        if (data.includes("port=")){
+            port = data.replace("port=", "")
+        }
+
         if (data.includes('Starting server...')) {
             // Server is fully functional, the GUI can be started and the server can be accessed
             createWindow();
 
-            axios.get(`http://localhost:5000/`).then(
+            axios.get(`http://localhost:${port}/`).then(
                 response => {
                     console.log(response.data);
                 }
@@ -86,7 +92,7 @@ app.on('activate', () => {
 });
 
 app.on('before-quit', () => {
-    axios.post(`http://localhost:5000/cleanup`)
+    axios.post(`http://localhost:${port}/cleanup`)
         .then(response => {
             console.log(response.data);
         })

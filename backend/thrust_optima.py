@@ -13,6 +13,7 @@ This module will also contain the entry point of the program and it will control
 To allow the frontend to access the console output, at the end of each method, the stdout buffer will be flushed
 to ensure that the output is sent to the frontend in real time.
 """
+import pickle
 
 from flask import Flask
 from waitress import serve
@@ -26,6 +27,7 @@ import Scans.utilities.database.db_utils as db
 
 app = Flask(__name__)
 controller = Controller()
+port = 5000
 
 
 @app.route('/')
@@ -44,26 +46,20 @@ def index():
 
 
 @app.route('/load', methods=['POST'])
-def load(path: str = None):
+def load(name: str = None):
     """
     This function will load an existing scan from the database.
     :raises ValueError: If the name is empty or None
     """
 
-    if not path.strip() or path is None:
+    global controller
+
+    if not name.strip() or name is None:
         raise ValueError("Path cannot be empty")
 
-    controller.restore_scan(path)
+    controller = pickle.load(db.get(name))
 
     return "Loaded"
-
-
-@app.route('/init/data', methods=['GET'])
-def init_database():
-    print("Initializing database...", file=sys.stdout)
-    sys.stdout.flush()
-    db.create()
-    return "Database created"
 
 
 @app.route('/cleanup', methods=['POST'])
@@ -73,14 +69,37 @@ def close():
     resources are properly closed and saved.
     :return: None
     """
+    global controller
+
     print("Closing...")
     sys.stdout.flush()
 
     return "Closed"
 
 
+def find_open_port():
+    """
+    This function will return an open port on the localhost and print it in the
+    stdout in order to ensure that the application can be launched even when the default
+    5000 port is already occupied.
+    :return: Integer: port
+    """
+    global port
+
+    # TODO create the port searching algorithm here.
+
+    print(f"port={port}")
+
+    return port
+
+
 # Waitress server
 if __name__ == '__main__':
     print("Starting server...", file=sys.stdout)
     sys.stdout.flush()
-    serve(app, host='localhost', port=5000)
+    try:
+        serve(app, host='localhost', port=5000)
+    except OSError as e:
+        if e.errno == 98:
+            find_open_port()
+            serve(app, host='localhost', port=port)
