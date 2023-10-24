@@ -15,9 +15,15 @@ header {
     flex: 1;
 }
 
+form {
+    display: flex;
+    flex-direction: column;
 
-section {
+    gap: 40px;
+
     flex: 9;
+
+    height: 60vh;
 }
 
 section .select {

@@ -19,7 +19,6 @@ from flask import Flask
 from waitress import serve
 
 import sys
-import socket
 import json
 
 from Scans.scans_controller import Controller
@@ -45,7 +44,7 @@ def index():
     return "Server Launched"
 
 
-@app.route('/load', methods=['POST'])
+@app.route('/load', methods=['GET'])
 def load(name: str = None):
     """
     This function will load an existing scan from the database.
@@ -60,6 +59,17 @@ def load(name: str = None):
     controller = pickle.load(db.get(name))
 
     return "Loaded"
+
+
+@app.route('/list', methods=['GET'])
+def list_scans():
+    """
+    This function will return a json parsed array of all the scans in the database.
+    """
+
+    scans = db.get_all_scans()
+
+    return json.dumps(scans)
 
 
 @app.route('/cleanup', methods=['POST'])

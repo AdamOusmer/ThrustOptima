@@ -12,9 +12,9 @@
 > 
 > - Calculate the propensity of every scan read from a DICOMDIR file.
 > - Determine the edges of any objects that contain one external edge and an optional internal edge.
+> - This software is using a custom .thst file for database and user's options and .optm files to save user's data.
 
 > _Future updates_
-> - This software is using a custom .thst file for database and user's options and .optm files to save user's data.
 > - 3D rendering of the CT scan.
 
 
@@ -35,6 +35,8 @@
 > - [TKinter](https://docs.python.org/3/library/tkinter.html)
 > - [Matplotlib](https://matplotlib.org/stable/contents.html)
 > - [OpenCV](https://docs.opencv.org/master/)
+> - [Sqlite3]()
+> - [Pickle]()
 
 
 ## Credits

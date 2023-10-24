@@ -18,6 +18,7 @@ const boot = require('./js/boot.js');
 
 let mainWindow;
 let serverProcess;
+let server_connected = false
 
 let port = "5000"
 
@@ -57,6 +58,14 @@ app.on('ready', () => {
 
         if (data.includes("port=")){
             port = data.replace("port=", "")
+            axios.get(`http://localhost:${port}/`).then(
+                response => {
+                    console.log(response.data);
+                    server_connected = true
+                }
+            ).catch(error => {
+                console.log(error);
+            });
         }
 
         if (data.includes('Starting server...')) {
@@ -66,6 +75,7 @@ app.on('ready', () => {
             axios.get(`http://localhost:${port}/`).then(
                 response => {
                     console.log(response.data);
+                    server_connected = true
                 }
             ).catch(error => {
                 console.log(error);

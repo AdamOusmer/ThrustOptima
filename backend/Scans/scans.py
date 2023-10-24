@@ -13,8 +13,6 @@ The LinkedList class is used to store the patient's IDs and the _scans associate
 easily access the data and separate the data from the analysis.
 """
 
-# TODO add load function from database
-
 from tkinter import filedialog
 from .utilities.linked_list import LinkedList as linkedList
 from .Exceptions import Exceptions as Ex

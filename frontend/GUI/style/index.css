@@ -84,3 +84,15 @@ li a:hover:before{
     opacity: 0.4;
 }
 
+footer {
+    position: absolute;
+
+    bottom: 5vh;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+footer pre {
+    color: #656E75;
+}
+

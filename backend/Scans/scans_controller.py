@@ -13,16 +13,11 @@ from .scans import Scans
 
 class Controller:
 
-    def __init__(self, restore_state: bool = False):
+    def __init__(self):
         """
         This is the constructor of the Controller class. It will be used to initialize the Controller object.
         """
         self._scans = None
-
-        if restore_state:
-            self.restore_scan()
-        else:
-            self._scans = None
 
     def restore_scan(self, path: str = None):
         """

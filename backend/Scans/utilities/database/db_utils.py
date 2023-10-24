@@ -6,8 +6,9 @@ All Rights Reserved.
 
 This module contains the definition of the Database class.
 
-This database will contain all the path to all the individual files. Each file will contain the scans objects
-and the sqlite3 database will contain the binary data of the scans. This database will be a .optm file.
+All scans will be transform into binaries using pickles and linked to a name
+defined by the user when creating a new scan. All the data will be stored in an .optm
+file and save into an sqlite3 database.
 """
 
 import sqlite3
@@ -70,9 +71,21 @@ def get(name: str = None):
     return pickle.loads(data)
 
 
+def get_all_scans():
+    """
+    This function will return an array of the current saved scans
+    :return: List: List of all the scans
+    """
+
+    database = sqlite3.connect(path)
+    cursor = database.cursor()
+
+    cursor.execute("SELECT ALL name FROM scans")
+    data = cursor.fetchall()
+    database.close()
+
+    return data
+
+
 if __name__ == '__main__':
-    create()
-    insert("test4444", "test4444")
-    print(get("test"))
-    update("test2", "test")
-    print(get("test"))
+    pass
