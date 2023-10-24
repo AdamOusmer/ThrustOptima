@@ -57,15 +57,9 @@ app.on('ready', () => {
         console.log(`stdout: ${data}`);
 
         if (data.includes("port=")){
-            port = data.replace("port=", "")
-            axios.get(`http://localhost:${port}/`).then(
-                response => {
-                    console.log(response.data);
-                    server_connected = true
-                }
-            ).catch(error => {
-                console.log(error);
-            });
+            console.log("port found")
+
+            port = data.toString().replace("port=", "")
         }
 
         if (data.includes('Starting server...')) {

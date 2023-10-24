@@ -26,7 +26,7 @@ import cv2
 
 class Scans:
     """
-    Class opening and reading all the DICOMDIR file and creating an array of Scan objects
+    Class opening and reading all the DICOMDIR file and creating a linkedList of Scan objects
     """
 
     # Start inner class Scan

@@ -14,9 +14,11 @@ To allow the frontend to access the console output, at the end of each method, t
 to ensure that the output is sent to the frontend in real time.
 """
 import pickle
+import time
 
 from flask import Flask
 from waitress import serve
+import socket
 
 import sys
 import json
@@ -96,20 +98,25 @@ def find_open_port():
     """
     global port
 
-    # TODO create the port searching algorithm here.
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.bind(('localhost', 0))
+    port = sock.getsockname()[1]
 
     print(f"port={port}")
+    sys.stdout.flush()
 
     return port
 
 
 # Waitress server
 if __name__ == '__main__':
-    print("Starting server...", file=sys.stdout)
-    sys.stdout.flush()
+    find_open_port()
     try:
-        serve(app, host='localhost', port=5000)
+        time.sleep(1)
+        print("Starting server...", file=sys.stdout)
+        sys.stdout.flush()
+
+        serve(app, host='localhost', port=port)
     except OSError as e:
         if e.errno == 98:
-            find_open_port()
             serve(app, host='localhost', port=port)
