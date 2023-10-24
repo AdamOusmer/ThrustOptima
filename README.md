@@ -21,7 +21,11 @@
 ## Installation
 
 > _Available soon_
-
+>
+> For now, please make sure that you have python 3.11 or higher installed on your computer. (in future updates we will provide a standalone version of the software)
+>
+> 
+> 
 ## Usage
 
 > _Available soon_
@@ -47,6 +51,12 @@
 ## License
 
 > This project has been developed by [Adam Ousmer](https://github.com/AdamOusmer) for the exclusive usage of [Space Concordia - Rocketry Division](https://spaceconcordia.ca/rocketry).
+> 
+> Please note that this project is open source but is not available for commercial use. All rights reserved.
+> 
+> Please note that Adam Ousmer, Space Concordia and all his divisions are not responsible for any damage of any kind caused by the use of this software.
+> 
+> For more information, please contact [Adam Ousmer](https://github.com/AdamOusmer) or [Space Concordia - Rocketry Division](https://spaceconcordia.ca/rocketry).
 
 ## References
 
