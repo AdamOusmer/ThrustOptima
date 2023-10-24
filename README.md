@@ -14,7 +14,7 @@
 > - Determine the edges of any objects that contain one external edge and an optional internal edge.
 
 > _Future updates_
-> - This software is using a custom .thst file for boot and user's options and .optm files to save user's data.
+> - This software is using a custom .thst file for database and user's options and .optm files to save user's data.
 > - 3D rendering of the CT scan.
 
 

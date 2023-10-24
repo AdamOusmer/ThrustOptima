@@ -7,16 +7,17 @@
 *
 */
 
+// TODO add the python interpreter to the package
+
 const {app, BrowserWindow, ipcMain} = require('electron');
 const path = require('path');
 const {spawn, exec} = require('child_process');
 const axios = require('axios');
-const boot = require('./js/database/boot.js');
+const boot = require('./js/boot.js');
 
 
 let mainWindow;
 let serverProcess;
-let port = 5000;
 
 
 // Create the browser window and load the index.html file
@@ -28,7 +29,7 @@ function createWindow() {
         'minHeight': 600,
         webPreferences: {
             nodeIntegration: true,
-            preload: path.join(__dirname, 'js/DOM.js') // Updated preload path
+            preload: path.join(__dirname, 'js/DOM.js')
         }
     });
 
@@ -45,17 +46,24 @@ app.on('ready', () => {
 
     boot.boot();
 
-    // Install Python requirements
-
     // Start Flask server
 
     serverProcess = spawn('python3', [path.join(__dirname, '../../backend/thrust_optima.py')]);
 
     serverProcess.stdout.on('data', (data) => {
-        if (data.includes('port=')) {
-            port = data.replace('port=', '');
-        } else {
-            console.log(`stdout: ${data}`);
+        console.log(`stdout: ${data}`);
+
+        if (data.includes('Starting server...')) {
+            // Server is fully functional, the GUI can be started and the server can be accessed
+            createWindow();
+
+            axios.get(`http://localhost:5000/`).then(
+                response => {
+                    console.log(response.data);
+                }
+            ).catch(error => {
+                console.log(error);
+            });
         }
     });
 
@@ -67,13 +75,6 @@ app.on('ready', () => {
         console.log(`Flask process exited with code ${code}`);
     });
 
-    // Update the port used by the Flask server
-
-
-
-    // Create the browser window
-
-    createWindow();
 });
 
 app.on('window-all-closed', () => {
@@ -85,7 +86,7 @@ app.on('activate', () => {
 });
 
 app.on('before-quit', () => {
-    axios.post(`http://localhost:${port}/cleanup`)
+    axios.post(`http://localhost:5000/cleanup`)
         .then(response => {
             console.log(response.data);
         })

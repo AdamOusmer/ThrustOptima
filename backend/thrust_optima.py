@@ -22,10 +22,10 @@ import socket
 import json
 
 from Scans.scans_controller import Controller
+import Scans.utilities.database.db_utils as db
 
 app = Flask(__name__)
 controller = Controller()
-port = None
 
 
 @app.route('/')
@@ -34,9 +34,13 @@ def index():
     Entry point of the program
     :return: None
     """
-    print("port=" + str(port))
+    db.create()
+    print("Database initialized", file=sys.stdout)
     sys.stdout.flush()
-    return port
+
+    db.insert("hi", "test4444")
+
+    return "Server Launched"
 
 
 @app.route('/load', methods=['POST'])
@@ -50,6 +54,16 @@ def load(path: str = None):
         raise ValueError("Path cannot be empty")
 
     controller.restore_scan(path)
+
+    return "Loaded"
+
+
+@app.route('/init/data', methods=['GET'])
+def init_database():
+    print("Initializing database...", file=sys.stdout)
+    sys.stdout.flush()
+    db.create()
+    return "Database created"
 
 
 @app.route('/cleanup', methods=['POST'])
@@ -66,27 +80,7 @@ def close():
 
 
 # Waitress server
-
-def find_available_port():
-    """
-    This function will find an available port to run the server on.
-    :return: The port number
-    """
-
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.bind(('', 0))
-    new_port = sock.getsockname()[1]
-    sock.close()
-
-    return new_port
-
-
 if __name__ == '__main__':
     print("Starting server...", file=sys.stdout)
     sys.stdout.flush()
-    try:
-        serve(app, host='localhost', port=5000)
-    except OSError as e:
-        if e.errno == 98:
-            port = find_available_port()
-            serve(app, host='localhost', port=port)
+    serve(app, host='localhost', port=5000)
