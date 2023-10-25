@@ -34,14 +34,17 @@
 ## Dependencies
 > This software is an [Electron](https://www.electronjs.org), [Flask](https://flask.palletsprojects.com/en/3.0.x/), [Waitress WSGI](https://pypi.org/project/waitress/) and [Python](https://www.python.org) 3.11 project.
 > 
-> It uses the following libraries:
+> It uses the following libraries for the frontend:
+> - [axios](https://axios-http.com/docs/intro)
+> - [sqlite3](https://www.sqlite.org/index.html)
+> 
+> It uses the following libraries for the backend:
 > - [Pydicom](https://pydicom.github.io/pydicom/dev/index.html#)
 > - [Numpy](https://numpy.org/doc/)
-> - [TKinter](https://docs.python.org/3/library/tkinter.html)
+> - [Tkinter](https://docs.python.org/3/library/tkinter.html)
 > - [Matplotlib](https://matplotlib.org/stable/contents.html)
 > - [OpenCV](https://docs.opencv.org/master/)
-> - [Sqlite3]()
-> - [Pickle]()
+> - [Sqlite3](https://www.sqlite.org/index.html)
 
 
 ## Credits
