@@ -23,12 +23,13 @@
 > _Available soon_
 >
 > For now, please make sure that you have python 3.11 or higher installed on your computer. (in future updates we will provide a standalone version of the software)
->
-> 
-> 
+
+
 ## Usage
 
 > _Available soon_
+>
+> For now, the main.js file is the main file to run the software. (in future updates we will provide a standalone version of the software)
 
 ## Dependencies
 > This software is an [Electron](https://www.electronjs.org), [Flask](https://flask.palletsprojects.com/en/3.0.x/), [Waitress WSGI](https://pypi.org/project/waitress/) and [Python](https://www.python.org) 3.11 project.
