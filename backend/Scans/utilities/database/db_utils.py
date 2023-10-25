@@ -13,12 +13,16 @@ file and save into an sqlite3 database.
 
 import sqlite3
 import pickle
+
 import sys
 
 path = "data.optm"
 
 
 def create():
+    """
+    This function will create the database if it does not exist
+    """
     database = sqlite3.connect(path)
     cursor = database.cursor()
 
@@ -34,6 +38,11 @@ def create():
 
 
 def insert(data, name: str = None):
+    """
+    This function will insert a new scan into the database
+    :param data: the data to be saved
+    :param name: the name of the scan object
+    """
     if not name.strip() or name is None:
         raise ValueError("Name cannot be empty")
 
@@ -46,6 +55,11 @@ def insert(data, name: str = None):
 
 
 def update(data, name: str = None):
+    """
+    This function will update an existing scan in the database
+    :param data: the new data to be saved
+    :param name: the name of the old scan object
+    """
     if not name.strip() or name is None:
         raise ValueError("Name cannot be empty")
 
@@ -58,6 +72,11 @@ def update(data, name: str = None):
 
 
 def get(name: str = None):
+    """
+    This function will return the data of a scan object based on its name
+    :param name: name of the scan object to be retrieved
+    :return: Scan: the scan object
+    """
     if not name.strip() or name is None:
         raise ValueError("Name cannot be empty")
 
@@ -73,8 +92,8 @@ def get(name: str = None):
 
 def get_all_scans():
     """
-    This function will return an array of the current saved scans
-    :return: List: List of all the scans
+    This function will return an array of the names of the current saved scans
+    :return: List: List of all the scans' names
     """
 
     database = sqlite3.connect(path)
@@ -88,4 +107,7 @@ def get_all_scans():
 
 
 if __name__ == '__main__':
+    """
+    This is intended to be used for testing purposes only
+    """
     pass

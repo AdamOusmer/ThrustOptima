@@ -5,7 +5,7 @@ All Rights Reserved.
 ******************************************************************
 
 This module is the main controller of the scans module. It contains the definition of the Controller class that will
-be used in the thrust_optima.py module a Flask backend.
+be used in the thrust_optima.py module a Flask backend. It will be used to control the lifecycle of the scans module.
 """
 
 from .scans import Scans

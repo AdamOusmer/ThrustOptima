@@ -3,6 +3,9 @@
 Copyright Adam Ousmer for Space Concordia: Rocketry Division 2023
 All Rights Reserved.
 ******************************************************************
+
+This module contains the definition of all the custom exceptions that will be used in the different modules of the
+project.
 """
 
 

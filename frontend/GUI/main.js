@@ -20,7 +20,7 @@ let mainWindow;
 let serverProcess;
 let server_connected = false
 
-let port = "5000"
+let port = "";
 
 
 // Create the browser window and load the index.html file
@@ -109,5 +109,10 @@ ipcMain.on('hotspot-event', (event, arg) => {
     event.returnValue = 'Message received!'
     require('electron').shell.openExternal(`https://explorer.helium.com/hotspots/${arg}`);
 });
+
+
+module.exports = {
+    port
+}
 
 

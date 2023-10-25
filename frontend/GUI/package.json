@@ -5,10 +5,10 @@
   "scripts": {
     "start": "node_modules/.bin/electron .",
     "build": "npm run build-arm64 && npm run build-x64 && npm run build-linux && npm run build-windows",
-    "build-arm64": "node_modules/.bin/electron-packager . --platform=darwin --arch=arm64 --overwrite --out=../../out/arm64 --icon=assets/img/icons/ThrustOptima_Logo.incs --extra-resource=../backend",
-    "build-x64": "node_modules/.bin/electron-packager . --platform=darwin --arch=universal --overwrite --out=../../out/macos-x64 --icon=assets/img/icons/ThrustOptima_Logo.incs --extra-resource=../backend",
-    "build-windows": "node_modules/.bin/electron-packager . --platform=win32 --arch=x64 --overwrite --out=../../out/win --icon=assets/img/ThrustOptima_Logo.png --extra-resource=../backend",
-    "build-linux": "node_modules/.bin/electron-packager . --platform=linux --arch=x64 --overwrite --out=../../out/linux --icon=assets/img/icons/ThrustOptima_Logo.incs --extra-resource=../backend"
+    "build-arm64": "node_modules/.bin/electron-packager . --platform=darwin --arch=arm64 --overwrite --out=../../out/arm64 --icon=assets/img/icons/ThrustOptima_Logo.incs --extra-resource=../../backend",
+    "build-x64": "node_modules/.bin/electron-packager . --platform=darwin --arch=x64 --overwrite --out=../../out/macos-x64 --icon=assets/img/icons/ThrustOptima_Logo.incs --extra-resource=../../backend",
+    "build-windows": "node_modules/.bin/electron-packager . --platform=win32 --arch=x64 --overwrite --out=../../out/win --icon=assets/img/ThrustOptima_Logo.png --extra-resource=../../backend",
+    "build-linux": "node_modules/.bin/electron-packager . --platform=linux --arch=x64 --overwrite --out=../../out/linux --icon=assets/img/icons/ThrustOptima_Logo.incs --extra-resource=../../backend"
   },
   "build": {
     "appId": "me.adam-ousmer.thrust-optima",
@@ -21,7 +21,7 @@
       "icon": "assets/img/icons/ThrustOptima_Logo.ico"
     }
   },
-  "description": "Thrust Optima is a tool for optimizing the performance of a rocket engine.",
+  "description": "ThrustOptima is a tool for analyzing CT scans to determine the density.",
   "author": "Adam Ousmer",
   "company": "Space Concordia - Rocketry Division",
   "devDependencies": {

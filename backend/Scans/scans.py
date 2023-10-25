@@ -13,15 +13,18 @@ The LinkedList class is used to store the patient's IDs and the _scans associate
 easily access the data and separate the data from the analysis.
 """
 
-from tkinter import filedialog
 from .utilities.linked_list import LinkedList as linkedList
 from .Exceptions import Exceptions as Ex
+
+import pydicom
 import numpy as np
 import skimage as ski
-import pydicom
+import cv2
+
+from tkinter import filedialog
+
 import os
 import sys
-import cv2
 
 
 class Scans:
