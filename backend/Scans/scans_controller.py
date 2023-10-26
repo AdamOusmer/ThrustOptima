@@ -19,16 +19,24 @@ class Controller:
         """
         self._scans = None
 
-    def restore_scan(self, path: str = None):
+    def edge_detection(self, name:str = None):
         """
-        This function will load an existing scan from the database.
-        :raises ValueError: If the name is empty or None
+        This function will analyze the scan and return the results based on the name of the scan.
+        :param name:
+        :return: Integer:
         """
+        pass
 
-        if not path.strip() or path is None:
+    def density(self, name:str = None):
+        """
+        This function will analyze the scan and return the results based on the name of the scan.
+        :param name:
+        :return: Integer:
+        """
+        if not name.strip() or name is None:
             raise ValueError("Name cannot be empty")
 
-        self._scans = Scans(path)
+        return self._scans.density(name)
 
     def save(self, path: str = None):
         pass

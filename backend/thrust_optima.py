@@ -121,6 +121,7 @@ if __name__ == '__main__':
     
     :raises OSError: If the port is already occupied
     """
+
     find_open_port()
 
     try:
