@@ -14,19 +14,21 @@ file and save into an sqlite3 database.
 import sqlite3
 import pickle
 
-import json
-
 import sys
 
 
 class Database:
 
-    def __init__(self, path: str = ""):
+    def __init__(self, path: str = "", allowed_class: type = None):
 
         if not path.strip() or path is None:
             raise ValueError("self._path cannot be empty")
 
+        if allowed_class is None:
+            raise ValueError("allowed_class cannot be None")
+
         self._path = path
+        self._allowed_class = allowed_class
 
     def create(self):
         """
@@ -77,11 +79,10 @@ class Database:
         database.commit()
         database.close()
 
-    def get(self, name: str = None, allowed_class: type = None):
+    def get(self, name: str = None):
         """
         This function will return the data of a scan object based on its name
         :param name: name of the scan object to be retrieved
-        :param allowed_class: the class of the scan object to be retrieved
         :return: Scan: the scan object
         """
 
@@ -97,7 +98,7 @@ class Database:
 
         loaded = pickle.loads(data)
 
-        if isinstance(loaded, A):
+        if isinstance(loaded, self._allowed_class):
             print("Loaded")
             sys.stdout.flush()
             return loaded
@@ -105,29 +106,17 @@ class Database:
         print("Not recognized", sys.stderr)
         sys.exit(1)
 
+    def get_all_scans(self):
+        """
+        This function will return an array of the names of the current saved scans
+        :return: List: List of all the scans' names
+        """
 
-def get_all_scans():
-    """
-    This function will return an array of the names of the current saved scans
-    :return: List: List of all the scans' names
-    """
+        database = sqlite3.connect(self._path)
+        cursor = database.cursor()
 
-    database = sqlite3.connect(self._path)
-    cursor = database.cursor()
+        cursor.execute("SELECT ALL name FROM scans")
+        data = cursor.fetchall()
+        database.close()
 
-    cursor.execute("SELECT ALL name FROM scans")
-    data = cursor.fetchall()
-    database.close()
-
-    return data
-
-
-if __name__ == '__main__':
-    """
-    This is intended to be used for testing purposes only
-    """
-    create()
-
-    a = A()
-
-    insert(a, "a")
+        return data
