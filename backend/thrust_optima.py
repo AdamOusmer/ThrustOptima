@@ -30,7 +30,7 @@ import socket
 app = Flask(__name__)  # Flask application
 controller = Controller()  # Controller object of the scans module
 port = 5000  # Default port (We will find an open port when the server is launched)
-db = Db("database.db", Controller)  # Database object
+db = Db("data.optm", Controller)  # Database object
 
 
 @app.route('/')

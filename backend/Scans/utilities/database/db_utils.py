@@ -28,7 +28,7 @@ class Database:
             raise ValueError("allowed_class cannot be None")
 
         self._path = path
-        self._allowed_class = allowed_class
+        self._ALLOWED_CLASS = allowed_class
 
     def create(self):
         """
@@ -56,7 +56,7 @@ class Database:
         if not name.strip() or name is None:
             raise ValueError("Name cannot be empty")
 
-        database = sqlite3.connect(self._self._path)
+        database = sqlite3.connect(self._path)
         cursor = database.cursor()
 
         cursor.execute("INSERT INTO scans VALUES (?, ?)", (name, pickle.dumps(data)))
@@ -98,7 +98,7 @@ class Database:
 
         loaded = pickle.loads(data)
 
-        if isinstance(loaded, self._allowed_class):
+        if isinstance(loaded, self._ALLOWED_CLASS):
             print("Loaded")
             sys.stdout.flush()
             return loaded

@@ -47,4 +47,9 @@ class Controller:
         return self._scans.density(name)
 
     def save(self, path: str = None):
+        """
+        This function will save the scan into the database.
+        :param path:
+        :return:
+        """
         pass

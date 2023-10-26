@@ -54,7 +54,7 @@ class Scans:
             # Here the image is set to HoundsField Unit (HU) and the pixel array is normalized.
 
             self._edges: list = []
-            
+
             self.propensity: float = 0
             self._shaped: bool = False  # Used to check if the image has been shaped before calculating the propensity.
 
@@ -224,6 +224,19 @@ class Scans:
         self._scans = order_array_per_patients(images_not_separated)
 
         print(f"Number of images founded: {nb_picture}")
+
+    def density(self, name: str = None):
+        """
+        Function to calculate the density of the scan.
+        :param name: Name of the patient to calculate the density
+        :return: Integer: Density of the scan.
+        """
+
+        # TODO Edge detection
+
+        # TODO Density calculation algorithm.
+
+        pass
 
     @property
     def name(self):
