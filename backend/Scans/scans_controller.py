@@ -13,13 +13,21 @@ from .scans import Scans
 
 class Controller:
 
-    def __init__(self):
+    def __init__(self, new: bool = False, name: str = None, path: str = None):
         """
         This is the constructor of the Controller class. It will be used to initialize the Controller object.
         """
-        self._scans = None
 
-    def edge_detection(self, name:str = None):
+        if not new:
+            self._scans = None
+            return
+
+        if not name.strip() or name is None:
+            raise ValueError("Name cannot be empty")
+
+        self._scans = Scans(name, path)
+
+    def edge_detection(self, name: str = None):
         """
         This function will analyze the scan and return the results based on the name of the scan.
         :param name:
@@ -27,7 +35,7 @@ class Controller:
         """
         pass
 
-    def density(self, name:str = None):
+    def density(self, name: str = None):
         """
         This function will analyze the scan and return the results based on the name of the scan.
         :param name:

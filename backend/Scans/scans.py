@@ -192,8 +192,13 @@ class Scans:
 
         self._loaded = True
 
+        dicomdir = None
+
         #  Dicomdir is a file that contains a summary of a FIle-Set.
-        dicomdir = pydicom.dcmread(self._dicomdir_path)
+        try:
+            dicomdir = pydicom.dcmread(self._dicomdir_path)
+        except:
+            print("Error while reading the DICOMDIR file.", file=sys.stderr)
 
         for dicom in dicomdir.DirectoryRecordSequence:
 

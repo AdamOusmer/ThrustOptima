@@ -15,7 +15,7 @@ to ensure that the output is sent to the frontend in real time.
 """
 
 from Scans.scans_controller import Controller
-import Scans.utilities.database.db_utils as db
+from Scans.utilities.database.db_utils import Database as Db
 
 import pickle
 import json
@@ -27,10 +27,10 @@ from waitress import serve
 import sys
 import socket
 
-
 app = Flask(__name__)  # Flask application
 controller = Controller()  # Controller object of the scans module
 port = 5000  # Default port (We will find an open port when the server is launched)
+db = Db("database.db", Controller)  # Database object
 
 
 @app.route('/')
