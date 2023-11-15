@@ -1,5 +1,5 @@
 <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 25px;">
-<img src="frontend/GUI/assets/img/ThrustOptima_Logo.png" alt="" style="height: 300px; border-radius: 25px">
+<img src="../frontend/GUI/assets/img/ThrustOptima_Logo.png" alt="" style="height: 300px; border-radius: 25px">
 </div>
 
 # ThrustOptima
@@ -56,15 +56,11 @@
 > Font :
 > - [Playfair-Display](https://github.com/clauseggers/Playfair-Display)
 
-## License
+## [License](LICENSE.md)
 
 > This project has been developed by [Adam Ousmer](https://github.com/AdamOusmer) for the exclusive usage of [Space Concordia - Rocketry Division](https://spaceconcordia.ca/rocketry).
+>
 > 
-> Please note that this project is open source but is not available for commercial use. All rights reserved.
-> 
-> Please note that Adam Ousmer, Space Concordia and all his divisions are not responsible for any damage of any kind caused by the use of this software.
-> 
-> For more information, please contact [Adam Ousmer](https://github.com/AdamOusmer) or [Space Concordia - Rocketry Division](https://spaceconcordia.ca/rocketry).
 
 ## References
 

@@ -1,24 +1,20 @@
-<p style="text-align: center;">
-  <img src="https://raw.githubusercontent.com/ucsd-ets/ets-core/master/logo.png" alt="ETS Core Logo" width="200" />
-</p>
 # Software License Agreement
 
 ## Software License Agreement
-
 
 This Software License Agreement ("Agreement") is a legal contract between the entity providing this software ("Licensor") and the individual or entity holding a valid license to use the software ("Licensee"). By using the software, Licensee agrees to comply with and be bound by the terms and conditions outlined in this Agreement.
 
 ### 1. Grant of License
 
-Licensor grants Licensee a non-exclusive, non-transferable license to use the software, exclusively for individuals associated with the institution and those explicitly authorized by the institution. **No one should use this software unless they are part of the institution or explicitly authorized by the institution.**
+Licensor grants Licensee a non-exclusive, non-transferable license to use the software, exclusively for individuals associated with Space Concordia - Rocketry Division ("institution") and those explicitly authorized by the institution. **No one should use this software unless they are part of the institution or explicitly authorized by the institution.** The institution may revoke or modify this license at any time, for any reason, without notice.
 
 ### 2. Restrictions
 
 Licensee shall not, without prior written consent from the institution:
 
-a. Modify, adapt, or translate the software.
-b. Reverse engineer, decompile, or disassemble the software.
-c. Create derivative works based on the software.
+a. Modify, adapt, or translate the software. <br>
+b. Reverse engineer, decompile, or disassemble the software. <br>
+c. Create derivative works based on the software. <br>
 d. Use the software for any purpose other than as expressly authorized by the institution.
 
 ### 3. Limited Warranty
