@@ -1,5 +1,5 @@
 <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 25px;">
-<img src="../frontend/GUI/assets/img/ThrustOptima_Logo.png" alt="" style="height: 300px; border-radius: 25px">
+<img src="frontend/GUI/assets/img/ThrustOptima_Logo.png" alt="" style="height: 300px; border-radius: 25px">
 </div>
 
 # ThrustOptima
