@@ -13,7 +13,7 @@ const {port} = require('../../main.js')
 let json_data = null;
 
 function get_data(){
-    axios.get(`http://localhost:${port}/load`).then(
+    axios.get(`http://localhost:${port}/list`).then(
         response => {
             json_data = response.data;
             console.log(json_data);
@@ -38,6 +38,17 @@ function display(){
 
 }
 
-function selected(){
+function load(){
+    const selected = document.querySelector('.selected'); // TODO Change by a query selector
+
+    let path = selected.href;
+
+    axios.post(`https://localhost${port}/load`, {
+        path: path
+    }).then(response => {
+        console.log(response);
+    }).catch(error => {
+        console.log(error);
+    });
 
 }

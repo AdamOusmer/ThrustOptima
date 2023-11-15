@@ -19,6 +19,10 @@ import sys
 
 class Database:
 
+    class InvalidObjectError(Exception):
+        def __init__(self, message: str = "This object is not allowed to be loaded."):
+            super().__init__(message)
+
     def __init__(self, path: str = "", allowed_class: type = None):
 
         if not path.strip() or path is None:
@@ -104,7 +108,7 @@ class Database:
             return loaded
 
         print("Not recognized", sys.stderr)
-        sys.exit(1)
+        raise self.InvalidObjectError("The object is not recognized")
 
     def get_all_scans(self):
         """

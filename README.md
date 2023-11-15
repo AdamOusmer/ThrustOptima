@@ -1,3 +1,7 @@
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 25px;">
+<img src="frontend/GUI/assets/img/ThrustOptima_Logo.png" alt="" style="height: 300px; border-radius: 25px">
+</div>
+
 # ThrustOptima
 >By [Adam Ousmer](https://github.com/AdamOusmer) for [Space Concordia - Rocketry Division](https://spaceconcordia.ca/rocketry)
 
@@ -65,3 +69,19 @@
 ## References
 
 > _Available soon_
+
+
+## Contributing
+
+> _Available soon_
+
+## Project Status
+> _**PROJECT IN DEVELOPMENT**_
+
+## Contact
+> Please note that this project is developed for the exclusive usage of [Space Concordia - Rocketry Division](https://spaceconcordia.ca/rocketry).
+> 
+> - Adam Ousmer 
+>   - [Email](mailto:adam.ousmer@spaceconcordia.ca) 
+>   - [Github](https://www.github.com/AdamOusmer)
+

@@ -41,6 +41,8 @@ def index():
     This function will initialize the database.
     :return: String: "Server Launched"
     """
+    global db
+
     db.create()
     print("Database initialized", file=sys.stdout)
     sys.stdout.flush()
@@ -48,19 +50,51 @@ def index():
     return "Server Launched"
 
 
+@app.route('/save', methods=['POST'])
+def save(name: str = None):
+    """
+    This function will save the current scan into the database.
+    :return: String: "Saved"
+    """
+    global controller
+    global db
+
+    if name is None or not name.strip():
+        return "Name cannot be empty"
+
+    db.insert(controller, name)
+    print("Saved", file=sys.stdout)
+    sys.stdout.flush()
+
+    return "Saved"
+
+
 @app.route('/load', methods=['GET'])
 def load(name: str = None):
     """
     This function will load an existing scan from the database.
     :raises ValueError: If the name is empty or None
+    :param name: The name of the scan to be loaded
+    :return: String: "Loaded"
     """
 
     global controller
 
     if not name.strip() or name is None:
-        raise ValueError("Path cannot be empty")
+        return "Name cannot be empty"
 
-    controller = pickle.load(db.get(name))
+    try:
+        data = db.get(name)
+    except ValueError:
+        return "Invalid name"
+    except Db.InvalidObjectError:
+        print("Invalid object", file=sys.stderr)
+        sys.exit(1)
+
+    if data is None:
+        return "Scan not found"
+
+    controller = pickle.loads(data)
 
     return "Loaded"
 

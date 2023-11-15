@@ -51,7 +51,7 @@ app.on('ready', () => {
 
     // Start Flask server
 
-    serverProcess = spawn('python3', [path.join(__dirname, '../../backend/thrust_optima.py')]);
+    serverProcess = spawn('python3', [path.join(__dirname, '../../backend/src/thrust_optima.py')]);
 
     serverProcess.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);
@@ -73,6 +73,11 @@ app.on('ready', () => {
                 }
             ).catch(error => {
                 console.log(error);
+
+                // TODO save error in database
+
+                serverProcess = spawn('python3', [path.join(__dirname, '../../backend/src/thrust_optima.py')])
+                console.error("Server restarted")
             });
         }
     });
@@ -99,10 +104,17 @@ app.on('before-quit', () => {
     axios.post(`http://localhost:${port}/cleanup`)
         .then(response => {
             console.log(response.data);
+
+            serverProcess.kill('SIGINT');
         })
         .catch(error => {
             console.error(error);
+
+            serverProcess = spawn('python3', [path.join(__dirname, '../../backend/src/thrust_optima.py')])
+            console.error("Server restarted")
+
         });
+
 });
 
 ipcMain.on('hotspot-event', (event, arg) => {

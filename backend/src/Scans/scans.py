@@ -19,7 +19,6 @@ from .Exceptions import Exceptions as Ex
 import pydicom
 import numpy as np
 import skimage as ski
-import cv2
 
 from tkinter import filedialog
 
@@ -53,57 +52,26 @@ class Scans:
                     + self._image.RescaleIntercept).clip(min=0, max=1).astype(np.uint8)
             # Here the image is set to HoundsField Unit (HU) and the pixel array is normalized.
 
-            self._edges: list = []
-
             self.propensity: float = 0
             self._shaped: bool = False  # Used to check if the image has been shaped before calculating the propensity.
 
-        def shaping(self, depth: int = 250, multi_snake: bool = True):
+        def shaping(self):
             """
             Function to find the contour of object scanned and save it in the self.pixel_array_shaped.
-            :param depth: Size of the snake that will be used to find the contour.
-            :param multi_snake: If True, the snake will be used to find an internal contour.
             """
 
             def preprocessing():
                 """
-                Function to process the image using the Gradient Vector Flow algorithm.
+                Function to preprocess the image before finding the contour.
+                By default, it will apply a gaussian filter to the image.
                 return: The image preprocessed.
                 """
 
-                cv2.Sobel(self.pixel_array_HU, 6, 1, 0, ksize=5)
+                # Add any necessary preprocessing here
 
                 return ski.filters.gaussian(self.pixel_array_HU, sigma=1, preserve_range=True)
 
-            def gvf():
-                """
-                Function to calculate the Gradient Vector Flow of the image.
-                """
-
-                center = (self._image.Columns // 2, self._image.Rows // 2)
-                # Create theta values
-                theta = np.linspace(0, 2 * np.pi, depth)
-
-                # Create small_snake and large_snake arrays
-                small_snake = np.column_stack(
-                    (center[0] + 100 * np.cos(theta), center[1] + 100 * np.sin(theta))) if multi_snake else None
-                large_snake = np.column_stack((center[0] + (self._image.Columns - self._image.Columns / 1.5) * np.cos(
-                    theta), center[1] + (self._image.Columns - self._image.Columns / 1.5) * np.sin(theta)))
-
-                blurred = preprocessing()
-
-                small_defined_snake = ski.segmentation.active_contour(blurred, small_snake, alpha=0.015, beta=5,
-                                                                      gamma=0.01) if multi_snake else None
-                large_defined_snake = ski.segmentation.active_contour(blurred, large_snake, alpha=10, beta=20,
-                                                                      gamma=0.01)
-
-                return small_defined_snake, large_defined_snake
-
-            gvf_output = gvf()
-
-            if multi_snake:
-                self._edges.append(gvf_output[0])
-            self._edges.append(gvf_output[1])
+            preprocessed_image = preprocessing()
 
             self._shaped = True  # Last line of the function to make sure that the image has been shaped correctly.
 
@@ -111,7 +79,7 @@ class Scans:
             """ Function to calculate the propensity of the image that has been contoured. """
 
             if not self._shaped:
-                print("Warning: Image has not been shaped yet.", file=sys.stderr)
+                raise Ex.ImageNotShaped("Image has not been shaped.")
 
             pass
 
@@ -220,10 +188,13 @@ class Scans:
                         self._patients_ids.add(image_read.PatientID)
                     except AttributeError:
                         print("No PatientID found.")
+                        sys.stdout.flush()
 
         self._scans = order_array_per_patients(images_not_separated)
 
         print(f"Number of images founded: {nb_picture}")
+
+        return True
 
     def density(self, name: str = None):
         """
@@ -232,11 +203,10 @@ class Scans:
         :return: Integer: Density of the scan.
         """
 
-        # TODO Edge detection
+        if name is None:
+            raise ValueError("Name cannot be None.")
 
-        # TODO Density calculation algorithm.
-
-        pass
+        return 1
 
     @property
     def name(self):

@@ -18,19 +18,23 @@ class NoDirectoryFound(Exception):
 
 
 class ImageEmpty(Exception):
-    pass
+    def __init__(self, message: str = "Image is empty."):
+        super().__init__(message)
 
 
 class AlreadyLoaded(Exception):
-    pass
+    def __init__(self, message: str = "Data has already been loaded. Please unload the data before loading new data."):
+        super().__init__(message)
 
 
 class NoImageFound(Exception):
-    pass
+    def __init__(self, message: str = "No image found. Please load an image before using this function."):
+        super().__init__(message)
 
 
 class NoScanFound(Exception):
-    pass
+    def __init__(self, message: str = "No scan found. Please load a scan before using this function."):
+        super().__init__(message)
 
 
 class DangerousModification(Exception):
@@ -43,3 +47,9 @@ class DangerousModification(Exception):
 class NotLoaded(Exception):
     def __init__(self, message: str = "No data has been loaded yet. Please load data before using this function."):
         super().__init__(message)
+
+
+class ImageNotShaped(Exception):
+    def __init__(self,
+                 message: str = "The image has not been shaped yet. Please shape the image before using this function."):
+        super.__init__(message)
