@@ -5,6 +5,13 @@
 * All Rights Reserved.
 * ******************************************************************
 *
+* This file is the main file for the Electron GUI. It is responsible for starting the Flask server and the Electron GUI.
+*
+* When the application 'ready', the thrust_optima.py file is spawned as a child process. The stdout of the process is used
+* to determine when the server is fully functional. The port number is also extracted from the stdout. Once the server is
+* started, the stdout will contain the message "port='... '" followed by 'Starting server...' enabling the fronted to access
+* the backend. The GUI is then started and the server is accessed at the index route to initialize the backend database.
+*
 */
 
 // TODO add the python interpreter to the package
@@ -37,7 +44,7 @@ function createWindow() {
     });
 
     // Load the index.html file
-    mainWindow.loadFile(path.join(__dirname, 'html/index.html'));
+    mainWindow.loadFile(path.join(__dirname, 'html/index.html')).then(r => console.log("Loaded index.html"));
 
     mainWindow.on('closed', () => {
         mainWindow = null;
