@@ -18,7 +18,7 @@
 
 const {app, BrowserWindow, ipcMain} = require('electron');
 const path = require('path');
-const {spawn, exec} = require('child_process');
+const {spawn} = require('child_process');
 const axios = require('axios');
 const boot = require('./js/boot.js');
 

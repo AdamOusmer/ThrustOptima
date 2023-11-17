@@ -13,8 +13,8 @@ The LinkedList class is used to store the patient's IDs and the _scans associate
 easily access the data and separate the data from the analysis.
 """
 
-from backend.ThrustOptimaAnalyzer.Scans.utilities import linked_list as linked_list
-from backend.ThrustOptimaAnalyzer.Scans.Exceptions import Exceptions as Ex
+from Scans.utilities import linked_list as linked_list
+from Scans.Exceptions import Exceptions as Ex
 
 import pydicom
 import numpy as np

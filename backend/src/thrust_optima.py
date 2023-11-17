@@ -15,7 +15,7 @@ to ensure that the output is sent to the frontend in real time.
 """
 
 from Scans.scans_controller import Controller
-from backend.ThrustOptimaAnalyzer.database import db_utils as Db
+from Scans.utilities.database.db_utils import Database as Db
 import pickle
 import json
 import time
