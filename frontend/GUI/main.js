@@ -58,7 +58,7 @@ app.on('ready', () => {
 
     // Start Flask server
 
-    serverProcess = spawn('python3', [path.join(__dirname, '../../backend/ThrustOptimaAnalyzer/thrust_optima.py')]);
+    serverProcess = spawn('python3', [path.join(__dirname, '../../backend/src/thrust_optima.py')]);
 
     serverProcess.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);
@@ -83,7 +83,7 @@ app.on('ready', () => {
 
                 // TODO save error in database
 
-                serverProcess = spawn('python3', [path.join(__dirname, '../../backend/ThrustOptimaAnalyzer/thrust_optima.py')])
+                serverProcess = spawn('python3', [path.join(__dirname, '../../backend/src/thrust_optima.py')])
                 console.error("Server restarted")
             });
         }
@@ -107,8 +107,8 @@ app.on('activate', () => {
     if (mainWindow === null) createWindow();
 });
 
-app.on('before-quit', async () => { // Async is required for the axios call to work properly and entirely
-    await axios.post(`http://localhost:${port}/cleanup`)
+app.on('before-quit', () => {
+    axios.post(`http://localhost:${port}/cleanup`)
         .then(response => {
             console.log(response.data);
 
@@ -117,7 +117,7 @@ app.on('before-quit', async () => { // Async is required for the axios call to w
         .catch(error => {
             console.error(error);
 
-            serverProcess = spawn('python3', [path.join(__dirname, '../../backend/ThrustOptimaAnalyzer/thrust_optima.py')])
+            serverProcess = spawn('python3', [path.join(__dirname, '../../backend/src/thrust_optima.py')])
             console.error("Server restarted")
 
         });
