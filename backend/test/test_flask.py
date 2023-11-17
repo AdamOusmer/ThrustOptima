@@ -10,7 +10,7 @@ This module contains the definition of the tests for the Flask application using
 
 import unittest
 
-from backend.ThrustOptimaAnalyzer import thrust_optima as flask_app
+from backend import thrust_optima as flask_app
 
 
 # TODO find a way to import all the components of the flask app and test them

@@ -13,8 +13,8 @@ The LinkedList class is used to store the patient's IDs and the _scans associate
 easily access the data and separate the data from the analysis.
 """
 
-from .utilities.linked_list import LinkedList as linkedList
-from .Exceptions import Exceptions as Ex
+from backend.ThrustOptimaAnalyzer.Scans.utilities import linked_list as linked_list
+from backend.ThrustOptimaAnalyzer.Scans.Exceptions import Exceptions as Ex
 
 import pydicom
 import numpy as np
@@ -73,7 +73,6 @@ class Scans:
 
             preprocessed_image = preprocessing()
 
-
             self._shaped = True  # Last line of the function to make sure that the image has been shaped correctly.
 
         def calc_density(self):
@@ -97,7 +96,7 @@ class Scans:
         # Set and create attributes
         self._dicomdir_path = None
         self._name: str = f"CTScan_{name if name is not None else 'Unknown'}"  # To be used for the database
-        self._scans: linkedList = linkedList()
+        self._scans: linked_list = linked_list()
         self._patients_ids: set = set()  # Use a set to avoid duplicates
         self._loaded: bool = False
 
@@ -142,7 +141,7 @@ class Scans:
 
             images = sorted(images, key=lambda image_sorter: image_sorter.InstanceNumber)
 
-            patients_scans = linkedList()
+            patients_scans = linked_list()
 
             for patient_IDS in self._patients_ids:
                 patients_scans.add([], str(patient_IDS))
