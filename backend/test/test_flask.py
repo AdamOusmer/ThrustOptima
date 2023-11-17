@@ -27,6 +27,5 @@ class ConnectionTesting(unittest.TestCase):
         self.assertFalse(port1 == port2)
 
 
-
 if __name__ == "__main__":
     unittest.main()

@@ -141,6 +141,8 @@ def find_open_port():
     sock.bind(('localhost', 0))  # Bind the socket to the localhost and a random port
     port = sock.getsockname()[1]
 
+    sock.close()  # Close the socket
+
     print(f"port={port}")  # send the port to the frontend through the stdout
     sys.stdout.flush()
 

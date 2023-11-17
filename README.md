@@ -5,20 +5,24 @@
 # ThrustOptima
 >By [Adam Ousmer](https://github.com/AdamOusmer) for [Space Concordia - Rocketry Division](https://spaceconcordia.ca/rocketry)
 
-## _PROJECT IN DEVELOPMENT_
+[![License](https://img.shields.io/badge/License-See%20License-blue.svg)](./LICENSE.md) [![Release](https://img.shields.io/badge/Release-None-green)](https://GitHub.com/AdamOusmer/ThrustOptima/releases/)
+
+## Project Status
+> _**PROJECT IN DEVELOPMENT**_
 
 
 ## Introduction
 
 The main purpose of this software is to calculate the propensity of a rocket engine using a CT SCAN. 
 
-> The software will be able to:
-> 
+The software will be able to: 
+
 > - Calculate the propensity of every scan read from a DICOMDIR file.
-> - Determine the edges of any objects that contain one external edge and an optional internal edge.
+>- Determine the edges of any objects that contain one external edge and an optional internal edge.
 > - This software is using a custom .thst file for database and user's options and .optm files to save user's data.
 
-> _Future updates_
+
+_Future updates:_
 > - 3D rendering of the CT scan.
 
 
@@ -33,7 +37,7 @@ For now, please make sure that you have python 3.11 or higher installed on your 
 
 > _Available soon_
 
- For now, the main.js file is the main file to run the software. (in future updates we will provide a standalone version of the software)
+For now, the main.js file is the main file to run the software. (in future updates we will provide a standalone version of the software)
 
 ## Dependencies
  This software is an [Electron](https://www.electronjs.org), [Flask](https://flask.palletsprojects.com/en/3.0.x/), [Waitress WSGI](https://pypi.org/project/waitress/) and [Python](https://www.python.org) 3.11 project.
@@ -71,12 +75,8 @@ This project has been developed by [Adam Ousmer](https://github.com/AdamOusmer) 
 
 > _Available soon_
 
-## Project Status
-> _**PROJECT IN DEVELOPMENT**_
-
 ## Contact
 Please note that this project is developed for the exclusive usage of [Space Concordia - Rocketry Division](https://spaceconcordia.ca/rocketry).
  
 - Adam Ousmer 
-    - [adam.ousmer@spaceconcordia.ca](mailto:adam.ousmer@spaceconcordia.ca)
-
+    - [adam.ousmer@spaceconcordia.ca](mailto:adam.ousmer@spaceconcordia.ca)  2

@@ -126,7 +126,7 @@ app.on('before-quit', () => {
 
 ipcMain.on('hotspot-event', (event, arg) => {
     event.returnValue = 'Message received!'
-    require('electron').shell.openExternal(`https://explorer.helium.com/hotspots/${arg}`);
+    require('electron').shell.openExternal(`https://explorer.helium.com/hotspots/${arg}`).then();
 });
 
 

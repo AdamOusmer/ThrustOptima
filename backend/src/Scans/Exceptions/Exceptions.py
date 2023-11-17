@@ -10,11 +10,19 @@ project.
 
 
 class NoDirectorySelected(Exception):
-    pass
+    def __init__(self, message: str = "No directory selected. Please select a DICOMDIR file."):
+        super().__init__(message)
 
 
 class NoDirectoryFound(Exception):
-    pass
+    def __init__(self, message: str = "No directory found. Please select a DICOMDIR file."):
+        super().__init__(message)
+
+
+class DicomdirError(Exception):
+    def __init__(self):
+        super().__init__(
+            "Unable to read the DICOMDIR file. Please select a valid DICOMDIR file or make sure it is not corrupted.")
 
 
 class ImageEmpty(Exception):
@@ -50,6 +58,6 @@ class NotLoaded(Exception):
 
 
 class ImageNotShaped(Exception):
-    def __init__(self,
-                 message: str = "The image has not been shaped yet. Please shape the image before using this function."):
-        super.__init__(message)
+    def __init__(self, message: str = "The image has not been shaped yet. Please shape the image before using this "
+                                      "function."):
+        super().__init__(message)

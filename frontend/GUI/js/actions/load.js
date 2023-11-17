@@ -18,7 +18,6 @@ function get_data(){
             json_data = response.data;
             console.log(json_data);
             display();
-
         }).catch(error => {
             console.log(error);
         });
@@ -26,6 +25,8 @@ function get_data(){
 
 
 function display(){
+
+    // TODO Parse JSON data to array and add every one of with a class of 'scans'1
 
     let arr = json_data["data"];
 
@@ -46,7 +47,7 @@ function load(){
     axios.post(`https://localhost${port}/load`, {
         path: path
     }).then(response => {
-        console.log(response);
+
     }).catch(error => {
         console.log(error);
     });

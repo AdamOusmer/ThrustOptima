@@ -73,9 +73,10 @@ class Scans:
 
             preprocessed_image = preprocessing()
 
+
             self._shaped = True  # Last line of the function to make sure that the image has been shaped correctly.
 
-        def cal_propensity(self):
+        def calc_density(self):
             """ Function to calculate the propensity of the image that has been contoured. """
 
             if not self._shaped:
@@ -166,7 +167,7 @@ class Scans:
         try:
             dicomdir = pydicom.dcmread(self._dicomdir_path)
         except:
-            print("Error while reading the DICOMDIR file.", file=sys.stderr)
+            raise Ex.DicomdirError()
 
         for dicom in dicomdir.DirectoryRecordSequence:
 
