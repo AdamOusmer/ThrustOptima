@@ -62,10 +62,22 @@ _Read the [theory](Theory.md) file for more information about the theory behind 
   >- A description of the return value.
 
 ### Code Structure
-#### Functions 
+
+In order to make the code more readable and understandable, the following rules should be followed when writing code for this project.
+These rules are made in order to make the code more readable, understandable, accessible, modulable and maintainable.
+
 - The code should be structured in a way that is easy to read and understand.
+
+#### Functions 
 - Functions used inside a unique function should be placed as a nested function.
-- Class used to support another a unique class should be placed as an inner-class
+
+#### Classes
+- Class used to support another a unique class should be placed as an inner-class.
+- Class used to support multiple classes should be placed in a separate file.
+
+#### Modules
+- Modules should be access using a controller class named (name of the class)_controller. The modules should never be accessed directly by the user or the main process of both the frontend and the backend.
+
 
 ## Dependencies
  This software is an [Electron](https://www.electronjs.org), [Flask](https://flask.palletsprojects.com/en/3.0.x/), [Waitress WSGI](https://pypi.org/project/waitress/) and [Python](https://www.python.org) 3.11 project.
@@ -83,7 +95,52 @@ _Read the [theory](Theory.md) file for more information about the theory behind 
 > - [OpenCV](https://docs.opencv.org/master/)
 > - [Sqlite3](https://www.sqlite.org/index.html)
 
+## Main Components of the Software
 
+- [main.js](frontend/GUI/main.js)
+- [thrust_optima.py](backend/src/thrust_optima.py)
+- [scans.py](backend/src/Scans/scans.py)
+
+### Main.js
+This file is the main file of the software. It is responsible to initialize both the frontend and the backend and install the python dependencies.
+The backend is launched as a spawn process using node.js. At the launch of the application, the backend is initialized, the port is retrieved and the frontend is launched.
+It will then initialize the frontend database and send a http request to the backend to initialize his database.
+
+```javascript
+// main.js
+app.on('ready', () => {
+  boot.boot(); // Initialize the frontend database and install the required python packages
+
+  // Start Flask server
+  serverProcess = spawn('python3', [path.join(__dirname, '../../backend/src/thrust_optima.py')]);
+  serverProcess.stdout.on('data', (data) => {
+    console.log(`stdout: ${data}`);
+
+    if (data.includes("port=")){ // Retrieve the port
+      console.log("port found")
+
+      port = data.toString().replace("port=", "")
+    }
+
+    if (data.includes('Starting server...')) {
+      // Server is fully functional, the GUI can be started and the server can be accessed
+      createWindow();
+
+      axios.get(`http://localhost:${port}/`).then( // Initialize the backend database
+              response => {
+                console.log(response.data);
+                server_connected = true
+              }
+      ).catch(error => {
+        console.error(error);
+        serverProcess = spawn('python3', [path.join(__dirname, '../../backend/src/thrust_optima.py')])
+        console.error("Server restarted")
+      });
+    }
+  });
+  // [...]
+});
+```
 ## Credits
 
 > Font :

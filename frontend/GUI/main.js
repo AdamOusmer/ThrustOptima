@@ -52,14 +52,10 @@ function createWindow() {
 }
 
 app.on('ready', () => {
-
-
-    boot.boot();
+    boot.boot(); // Initialize the frontend database and install the required python packages
 
     // Start Flask server
-
     serverProcess = spawn('python3', [path.join(__dirname, '../../backend/src/thrust_optima.py')]);
-
     serverProcess.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);
 
@@ -73,13 +69,13 @@ app.on('ready', () => {
             // Server is fully functional, the GUI can be started and the server can be accessed
             createWindow();
 
-            axios.get(`http://localhost:${port}/`).then(
+            axios.get(`http://localhost:${port}/`).then( // Initialize the backend database
                 response => {
                     console.log(response.data);
                     server_connected = true
                 }
             ).catch(error => {
-                console.log(error);
+                console.error(error);
 
                 // TODO save error in database
 
@@ -96,7 +92,6 @@ app.on('ready', () => {
     serverProcess.on('close', (code) => {
         console.log(`Flask process exited with code ${code}`);
     });
-
 });
 
 app.on('window-all-closed', () => {
