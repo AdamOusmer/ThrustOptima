@@ -1,3 +1,7 @@
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 25px;">
+<img src="frontend/GUI/assets/img/ThrustOptima_Banner.png" alt="" style="height: 400px; border-radius: 25px">
+</div>
+
 # Software License Agreement
 
 ## Software License Agreement
