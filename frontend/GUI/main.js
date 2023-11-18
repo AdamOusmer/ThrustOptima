@@ -106,17 +106,13 @@ app.on('before-quit', () => {
     axios.post(`http://localhost:${port}/cleanup`)
         .then(response => {
             console.log(response.data);
-
             serverProcess.kill('SIGINT');
         })
         .catch(error => {
             console.error(error);
-
             serverProcess = spawn('python3', [path.join(__dirname, '../../backend/src/thrust_optima.py')])
             console.error("Server restarted")
-
         });
-
 });
 
 ipcMain.on('hotspot-event', (event, arg) => {
