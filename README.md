@@ -149,8 +149,7 @@ app.on('ready', () => {
                 }
             ).catch(error => {
                 console.error(error);
-                serverProcess = spawn('python3', [path.join(__dirname, '../../backend/src/thrust_optima.py')])
-                console.error("Server restarted")
+                console.error("Server cleanup process failed")
             });
         }
     });
@@ -158,6 +157,7 @@ app.on('ready', () => {
 });
 ```
 
+<br>
 The main.js file is also responsible to send http requests to the backend to start the cleanup process and to close the
 backend process when the application is closed before it quits.
 

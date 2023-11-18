@@ -110,8 +110,7 @@ app.on('before-quit', () => {
         })
         .catch(error => {
             console.error(error);
-            serverProcess = spawn('python3', [path.join(__dirname, '../../backend/src/thrust_optima.py')])
-            console.error("Server restarted")
+            console.error("Server cleanup process failed")
         });
 });
 
