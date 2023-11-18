@@ -21,7 +21,7 @@
       "icon": "assets/img/icons/ThrustOptima_Logo.ico"
     }
   },
-  "description": "ThrustOptima is a tool for analyzing CT scans to determine the density.",
+  "description": "ThrustOptima is a CT Scan Analyzer for Rocket Engines",
   "author": "Adam Ousmer",
   "company": "Space Concordia - Rocketry Division",
   "devDependencies": {
