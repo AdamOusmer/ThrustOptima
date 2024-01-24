@@ -1,0 +1,35 @@
+{
+  "name": "thrustoptima",
+  "version": "0.0.0",
+  "description": "ThrustOptima is a CT Scan Analyzer for Rocket Engines",
+  "author": "Adam Ousmer",
+  "organization": "Space Concordia - Rocketry Division",
+
+  "main": "electron/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+      "start": "node_modules/.bin/electron .",
+      "build": "npm run build-arm64 && npm run build-x64 && npm run build-linux && npm run build-windows",
+      "build-arm64": "node_modules/.bin/electron-packager . --platform=darwin --arch=arm64 --overwrite --out=../../out/arm64 --icon=assets/img/icons/ThrustOptima_Logo.incs --extra-resource=../../backend",
+      "build-x64": "node_modules/.bin/electron-packager . --platform=darwin --arch=x64 --overwrite --out=../../out/macos-x64 --icon=assets/img/icons/ThrustOptima_Logo.incs --extra-resource=../../backend",
+      "build-windows": "node_modules/.bin/electron-packager . --platform=win32 --arch=x64 --overwrite --out=../../out/win --icon=assets/img/ThrustOptima_Logo.png --extra-resource=../../backend",
+      "build-linux": "node_modules/.bin/electron-packager . --platform=linux --arch=x64 --overwrite --out=../../out/linux --icon=assets/img/icons/ThrustOptima_Logo.incs --extra-resource=../../backend"
+  },
+
+  "build": {
+    "appId": "dev.adam-ousmer.thrust-optima",
+    "asar": true,
+    "productName": "Thrust Optima",
+    "directories": {
+      "output": "../../out/win"
+    },
+    "win": {
+      "icon": "assets/img/icons/ThrustOptima_Logo.ico"
+    }
+  },
+  "private": true,
+  "dependencies": {
+    "axios": "^1.6.5",
+    "electron": "^28.1.3"
+  }
+}

@@ -1,0 +1,18 @@
+:root {
+    --primary-color: #000303;
+    --secondary-color: #FEFEFE;
+    --accent1-color: #00CBC9;
+    --accent2-color: #015256;
+    --accent3-color: #00FEFC;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background: var(--primary-color);
+}
