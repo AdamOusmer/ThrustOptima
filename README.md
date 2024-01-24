@@ -1,5 +1,5 @@
 <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 25px;">
-<img src="frontend/GUI/assets/img/ThrustOptima_Banner.png" alt="" style="height: 400px; border-radius: 25px">
+<img src="assets/ThrustOptima_Banner.png" alt="" style="height: 400px; border-radius: 25px">
 </div>
 
 # ThrustOptima
@@ -38,7 +38,7 @@ provide a standalone version of the software)
 
 > _Available soon_
 
-For now, the main.js file is the main file to run the software. (in future updates we will provide a standalone version
+For now, the index.js file is the main file to run the software. (in future updates we will provide a standalone version
 of the software)
 
 ## Theory
@@ -110,7 +110,7 @@ and [Python](https://www.python.org) 3.11 project.
 
 ## Main Components of the Software
 
-- [main.js](frontend/GUI/main.js)
+- [index.js](frontend/GUI/main.js)
 - [thrust_optima.py](backend/src/thrust_optima.py)
 - [scans.py](backend/src/Scans/scans.py)
 
@@ -123,7 +123,7 @@ the port is retrieved and the frontend is launched.
 It will then initialize the frontend database and send a http request to the backend to initialize his database.
 
 ```javascript
-// main.js
+// index.js
 app.on('ready', () => {
     boot.boot(); // Initialize the frontend database and install the required python packages
 
@@ -158,11 +158,11 @@ app.on('ready', () => {
 ```
 
 <br>
-The main.js file is also responsible to send http requests to the backend to start the cleanup process and to close the
+The index.js file is also responsible to send http requests to the backend to start the cleanup process and to close the
 backend process when the application is closed before it quits.
 
 ```javascript
-// main.js
+// index.js
 app.on('before-quit', () => {
     axios.post(`http://localhost:${port}/cleanup`)
         .then(response => {

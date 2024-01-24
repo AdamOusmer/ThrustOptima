@@ -1,6 +1,0 @@
-waitress
-numpy
-pydicom
-scikit-image
-matplotlib
-opencv-python
