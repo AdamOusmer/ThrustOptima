@@ -19,6 +19,8 @@ from tkinter import filedialog
 from utilities.scan import Scan
 
 
+
+
 class Loader:
     def __init__(self, path: str = None):
         try:
