@@ -20,3 +20,8 @@ out
 
 # sqlite
 *.sqlite
+
+.gitignore
+
+.idea
+
