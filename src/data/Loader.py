@@ -3,17 +3,10 @@
 Copyright Adam Ousmer for Space Concordia - Rocketry Division 2026
 All Rights Reserved.
 ******************************************************************
-
-This module contains the Loader class which is used to load the data
-from all the DICOM files in a folder that contains a DICOMDIR file.
-
-It will also be the main controller of the data and will be used to
-access, modify and delete the data using the Scan class.
 """
-
 import os
 from dataclasses import asdict
-from logging import Logger
+import logging
 from pathlib import Path
 
 import pandas as pd
@@ -21,7 +14,7 @@ import pydicom
 
 from domain import ScanMetadata
 
-_LOGGER = Logger(__name__)
+_LOGGER = logging.getLogger(__name__)
 
 
 class Loader:
@@ -70,6 +63,7 @@ class Loader:
         dcm = Loader.get_files(path)
 
         scans = []
+        required_keys = ['InstanceNumber', 'PatientID', 'RescaleSlope', 'RescaleIntercept']
 
         for record in dcm.DirectoryRecordSequence:
 
@@ -81,32 +75,39 @@ class Loader:
             try:
                 image_read = pydicom.dcmread(record_directory, stop_before_pixels=True)
             except Exception:
-                _LOGGER.warning(f"Could not read DICOM file at {record_directory}. Skipping.")
+                _LOGGER.error(f"Could not read DICOM file at {record_directory}. Skipping.")
                 continue
 
-            if 0x7fe00010 not in image_read:  # Pixel Data tag
+            missing_keys = [key for key in required_keys if key not in image_read]
+
+            if missing_keys:
+                _LOGGER.debug(f"Skipping {record_directory.name}: Missing {missing_keys}")
                 continue
 
             image_type = getattr(image_read, 'ImageType', [])
             if 'LOCALIZER' in image_type or 'DERIVED' in image_type:
+                _LOGGER.debug(f"Skipping {record_directory.name}: ImageType is {image_type}")
                 continue
 
             scan_metadata = Loader.create_scan_metadata(image_read, record_directory)
 
-            scans.append({
-                **asdict(scan_metadata),
-                'metadata': scan_metadata   # Store to access pixel_array later
-            }
-            )
+            scans.append({**asdict(scan_metadata), 'metadata': scan_metadata  # Store to access pixel_array later
+            })
+
+        _LOGGER.info(f"Extracted {len(scans)} valid scans from DICOM directory.")
 
         return pd.DataFrame(scans)
 
     @staticmethod
     def load(path: str = None):
 
-        if (path_ := Loader.get_path(path)) is None:    # () is used cause of walrus operator precedence
+        if (path_ := Loader.get_path(path)) is None:  # () is used cause of walrus operator precedence
             raise FileNotFoundError("The path provided is invalid.")
 
+        _LOGGER.debug(f"Loading data from path: {path_}")
+
         data = Loader.extract_scans(path_)
+
+        _LOGGER.debug("Data loading complete.")
 
         return data
