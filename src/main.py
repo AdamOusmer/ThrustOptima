@@ -1,11 +1,11 @@
-from utils import cli, logger
-from data.Loader import Loader
 import logging
 
+from data.Loader import Loader
+from utils import cli, logger
+
+
 def main():
-
     args = cli.parse_arguments()
-
 
     logger.init_logger(args.trace)
 

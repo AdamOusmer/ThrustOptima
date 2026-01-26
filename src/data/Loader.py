@@ -11,6 +11,7 @@ from pathlib import Path
 
 import pandas as pd
 import pydicom
+from pydicom.errors import InvalidDicomError
 
 from domain import ScanMetadata
 
@@ -74,8 +75,11 @@ class Loader:
 
             try:
                 image_read = pydicom.dcmread(record_directory, stop_before_pixels=True)
-            except Exception:
+            except InvalidDicomError:
                 _LOGGER.error(f"Could not read DICOM file at {record_directory}. Skipping.")
+                continue
+            except TypeError:
+                _LOGGER.error(f"Type error encountered while reading {record_directory}. Skipping.")
                 continue
 
             missing_keys = [key for key in required_keys if key not in image_read]
