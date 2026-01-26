@@ -36,6 +36,9 @@ class ScanMetadata:
 
     calculated: bool = False
     propensity_score: float = 0.0
+    porosity: float = 0.0
+    entropy: float = 0.0
+    uniformity: float = 0.0
 
     @cached_property
     def pixel_array(self):
